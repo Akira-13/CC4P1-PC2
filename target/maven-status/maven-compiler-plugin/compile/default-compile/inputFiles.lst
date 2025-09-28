@@ -1,4 +1,8 @@
-/home/ak13a/NetBeansProjects/pc1_snake/src/main/java/cc4p1/snake/server/ClientSession.java
-/home/ak13a/NetBeansProjects/pc1_snake/src/main/java/cc4p1/snake/server/GameServer.java
-/home/ak13a/NetBeansProjects/pc1_snake/src/main/java/cc4p1/snake/server/GameState.java
-/home/ak13a/NetBeansProjects/pc1_snake/src/main/java/cc4p1/snake/server/ServerMain.java
+D:\Computacion\Programacion Concurrente y Distribuida\CC4P1-PC2\src\main\java\cc4p1\snake\client\ClientSession.java
+D:\Computacion\Programacion Concurrente y Distribuida\CC4P1-PC2\src\main\java\cc4p1\snake\commonlogic\Board.java
+D:\Computacion\Programacion Concurrente y Distribuida\CC4P1-PC2\src\main\java\cc4p1\snake\commonlogic\Fruit.java
+D:\Computacion\Programacion Concurrente y Distribuida\CC4P1-PC2\src\main\java\cc4p1\snake\commonlogic\Snake.java
+D:\Computacion\Programacion Concurrente y Distribuida\CC4P1-PC2\src\main\java\cc4p1\snake\server\GameServer.java
+D:\Computacion\Programacion Concurrente y Distribuida\CC4P1-PC2\src\main\java\cc4p1\snake\server\GameState.java
+D:\Computacion\Programacion Concurrente y Distribuida\CC4P1-PC2\src\main\java\cc4p1\snake\server\ServerMain.java
+D:\Computacion\Programacion Concurrente y Distribuida\CC4P1-PC2\src\main\java\cc4p1\snake\ui\GameWindow.java

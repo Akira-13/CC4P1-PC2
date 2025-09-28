@@ -1,5 +1,6 @@
-package cc4p1.snake.server;
+package cc4p1.snake.client;
 
+import cc4p1.snake.server.GameServer;
 import java.io.*;
 import java.net.*;
 
@@ -17,18 +18,18 @@ public class ClientSession {
     private volatile String lastDir = "RIGHT"; // dirección por defecto
     private volatile boolean running = true;
 
-    ClientSession(int playerId, Socket socket, GameServer server) throws IOException {
+    public ClientSession(int playerId, Socket socket, GameServer server) throws IOException {
         this.playerId = playerId;
         this.socket = socket;
         this.server = server;
         this.out = new PrintWriter(new BufferedWriter(new OutputStreamWriter(socket.getOutputStream())), true);
     }
 
-    int getPlayerId() {
+    public int getPlayerId() {
         return playerId;
     }
 
-    void setLastDirection(String d) {
+    public void setLastDirection(String d) {
         if (d == null) {
             return;
         }
@@ -38,17 +39,17 @@ public class ClientSession {
         }
     }
 
-    String consumeLastDirection() {
+    public String consumeLastDirection() {
         return lastDir;
     }
 
-    void send(String line) {
+    public void send(String line) {
         // println añade '\n' y hace flush (PrintWriter autoflush con println)
         out.print(line);
         out.flush();
     }
 
-    void closeSilently() {
+    public void closeSilently() {
         running = false;
         try {
             socket.close();
@@ -56,7 +57,7 @@ public class ClientSession {
         }
     }
 
-    void start() {
+    public void start() {
         Thread t = new Thread(() -> {
             try (BufferedReader br = new BufferedReader(new InputStreamReader(socket.getInputStream()))) {
                 String line;

@@ -1,4 +1,5 @@
 package cc4p1.snake.server;
+import cc4p1.snake.client.ClientSession;
 import java.io.*;
 import java.net.*;
 import java.util.*;
@@ -86,20 +87,20 @@ public class GameServer {
   }
 
   // llamadas desde ClientSession
-  void onJoin(int playerId, String name) {
+  public void onJoin(int playerId, String name) {
     state.addPlayer(playerId, name);
     ClientSession cs = clients.get(playerId);
     if (cs != null) cs.send("WELCOME " + playerId + "\n");
     System.out.println("Player joined: " + playerId + " name=" + name);
   }
 
-  void onInput(int playerId, String dir) {
+  public void onInput(int playerId, String dir) {
     // guardado en ClientSession; GameServer aplica en el tick
     ClientSession cs = clients.get(playerId);
     if (cs != null) cs.setLastDirection(dir);
   }
 
-  void onQuit(int playerId) {
+  public void onQuit(int playerId) {
     clients.remove(playerId);
     state.removePlayer(playerId);
     System.out.println("Player quit: " + playerId);
