@@ -7,6 +7,7 @@ package cc4p1.snake.ui;
 import cc4p1.snake.server.ServerMain;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.SwingUtilities;
 
 /**
  *
@@ -19,6 +20,7 @@ public class GameWindow extends javax.swing.JFrame {
      */
     public GameWindow() {
         initComponents();
+        setTitle("Snake Multijugador");
     }
 
     /**
@@ -48,12 +50,21 @@ public class GameWindow extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setResizable(false);
 
+        IPInput.setBorder(null);
+
+        PortInput.setBorder(null);
+
         jLabel1.setText("IP");
 
         jLabel2.setText("PORT");
 
         ConnectBtn.setText("CONNECT");
         ConnectBtn.setFocusPainted(false);
+        ConnectBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ConnectBtnActionPerformed(evt);
+            }
+        });
 
         Board.setEditable(false);
         Board.setColumns(20);
@@ -73,6 +84,8 @@ public class GameWindow extends javax.swing.JFrame {
         DownBtn.setFocusPainted(false);
 
         jLabel3.setText("PLAYER");
+
+        UsernameInput.setBorder(null);
 
         StartServerBtn.setText("START SERVER");
         StartServerBtn.setFocusPainted(false);
@@ -143,7 +156,7 @@ public class GameWindow extends javax.swing.JFrame {
                     .addComponent(ConnectBtn))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 214, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(20, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addGap(35, 35, 35)
                 .addComponent(StartServerBtn)
@@ -160,11 +173,15 @@ public class GameWindow extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
+    
+    public void updateBoard(String boardText) {
+        SwingUtilities.invokeLater(() -> Board.setText(boardText));
+    }
+    
     private void StartServerBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_StartServerBtnActionPerformed
         try {
             // TODO add your handling code here:
-            ServerMain.startServer(5000);
+            ServerMain.startServer(5000, this);
             StartServerBtn.setEnabled(false);
             ConnectBtn.setEnabled(false);
         } catch (Exception ex) {
@@ -172,6 +189,10 @@ public class GameWindow extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_StartServerBtnActionPerformed
 
+    private void ConnectBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ConnectBtnActionPerformed
+        // TODO add your handling code here:
+        StartServerBtn.setEnabled(false);
+    }//GEN-LAST:event_ConnectBtnActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

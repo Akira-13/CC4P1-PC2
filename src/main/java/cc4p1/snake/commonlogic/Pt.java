@@ -8,12 +8,7 @@ package cc4p1.snake.commonlogic;
  *
  * @author Albert
  */
-public class Fruit {
-    public int score;
-    public Pt point;
-    public Fruit(Pt point, int fruitScore)
-    {
-        this.point = point;
-        this.score = fruitScore; 
-    }
+public class Pt {
+    public int x, y;
+    public Pt(int x, int y){this.x=x; this.y=y;} 
 }

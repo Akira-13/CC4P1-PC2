@@ -4,10 +4,21 @@
  */
 package cc4p1.snake.commonlogic;
 
+import java.util.LinkedList;
+
 /**
  *
  * @author Albert
  */
 public class Snake {
-    public int size = 3;
+    //public int id;
+    public String name;
+    public int size = 1;
+    public LinkedList<Pt> points;
+    
+    public Snake(String name, LinkedList<Pt> points){
+        this.name = name;
+        this.points = points;
+    }
 }
+
