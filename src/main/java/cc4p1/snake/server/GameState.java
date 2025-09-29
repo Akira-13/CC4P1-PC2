@@ -1,4 +1,7 @@
 package cc4p1.snake.server;
+import cc4p1.snake.commonlogic.Fruit;
+import cc4p1.snake.commonlogic.Pt;
+import cc4p1.snake.commonlogic.Snake;
 import java.util.*;
 
 /**
@@ -12,19 +15,21 @@ import java.util.*;
  */
 public class GameState {
   public static final int WIDTH = 32;
-  public static final int HEIGHT = 16;
+  public static final int HEIGHT = 10;
 
   // Punto simple
-  static class Pt { int x, y; Pt(int x, int y){this.x=x;this.y=y;} }
-
-  private final Map<Integer, LinkedList<Pt>> snakes = new HashMap<>();
+  //static class Pt { int x, y; Pt(int x, int y){this.x=x;this.y=y;} }
+  //private final Map<Integer, LinkedList<Pt>> snakes = new HashMap<>();
+  private final Map<Integer,Snake> snakes = new HashMap();
   private final Map<Integer, String> directions = new HashMap<>();
   private final Map<Integer, Integer> scores = new HashMap<>();
-  private final List<Pt> fruits = new ArrayList<>();
+  private final List<Fruit> fruits = new ArrayList<>();
   private final Random rand = new Random();
 
   public GameState() {
     // spawn inicial de frutas
+    spawnFruit();
+    spawnFruit();
     spawnFruit();
     spawnFruit();
   }
@@ -33,9 +38,10 @@ public class GameState {
     // coloca la serpiente en una posición no colisionada
     int x = rand.nextInt(WIDTH);
     int y = rand.nextInt(HEIGHT);
+    
     LinkedList<Pt> body = new LinkedList<>();
     body.add(new Pt(x, y));
-    snakes.put(id, body);
+    snakes.put(id, new Snake(name, body));
     directions.put(id, "RIGHT");
     scores.put(id, 0);
   }
@@ -66,9 +72,9 @@ public class GameState {
     Map<Integer, Pt> newHeads = new HashMap<>();
 
     // calcular nueva cabeza
-    for (Map.Entry<Integer, LinkedList<Pt>> e : snakes.entrySet()) {
+    for (Map.Entry<Integer, Snake> e : snakes.entrySet()) {
       int id = e.getKey();
-      LinkedList<Pt> body = e.getValue();
+      LinkedList<Pt> body = e.getValue().points;
       Pt head = body.getFirst();
       String dir = directions.getOrDefault(id, "RIGHT");
       int nx = head.x, ny = head.y;
@@ -82,12 +88,12 @@ public class GameState {
     }
 
     // detectar colisiones (con otras cabezas o cuerpos)
-    for (Map.Entry<Integer, LinkedList<Pt>> e : snakes.entrySet()) {
+    for (Map.Entry<Integer, Snake> e : snakes.entrySet()) {
       int id = e.getKey();
       Pt nh = newHeads.get(id);
       boolean collided = false;
-      for (Map.Entry<Integer, LinkedList<Pt>> e2 : snakes.entrySet()) {
-        for (Pt seg : e2.getValue()) {
+      for (Map.Entry<Integer, Snake> e2 : snakes.entrySet()) {
+        for (Pt seg : e2.getValue().points) {
           if (seg.x == nh.x && seg.y == nh.y) {
             collided = true;
             break;
@@ -99,22 +105,22 @@ public class GameState {
     }
 
     // aplicar movimientos para los vivos
-    for (Map.Entry<Integer, LinkedList<Pt>> e : new HashMap<>(snakes).entrySet()) {
+    for (Map.Entry<Integer, Snake> e : new HashMap<>(snakes).entrySet()) {
       int id = e.getKey();
       if (dead.contains(id)) {
         snakes.remove(id);
         directions.remove(id);
         continue;
       }
-      LinkedList<Pt> body = e.getValue();
+      LinkedList<Pt> body = e.getValue().points;
       Pt nh = newHeads.get(id);
       body.addFirst(nh);
 
       // si comió fruta -> no quitar cola y +1 score
       boolean ate = false;
-      Iterator<Pt> fIt = fruits.iterator();
+      Iterator<Fruit> fIt = fruits.iterator();
       while (fIt.hasNext()) {
-        Pt f = fIt.next();
+        Pt f = fIt.next().point;
         if (f.x == nh.x && f.y == nh.y) { ate = true; fIt.remove(); break; }
       }
       if (ate) {
@@ -141,19 +147,61 @@ public class GameState {
     for (int tries = 0; tries < 20; tries++) {
       int x = rand.nextInt(WIDTH);
       int y = rand.nextInt(HEIGHT);
+      int fruitScore = rand.nextInt(1,10);
       boolean occ = false;
-      for (LinkedList<Pt> body : snakes.values()) {
-        for (Pt p : body) if (p.x == x && p.y == y) { occ = true; break; }
+      for (Snake snake : snakes.values()) {
+        for (Pt p : snake.points) if (p.x == x && p.y == y) { occ = true; break; }
         if (occ) break;
       }
       if (!occ) {
-        fruits.add(new Pt(x, y));
+        fruits.add(new Fruit(new Pt(x, y), fruitScore));
         return;
       }
     }
     // si no encontró sitio, no hace nada
   }
+  
+  // Renderizar tablero en TextArea
+  public synchronized String renderBoard() {
+    char[][] board = new char[HEIGHT][WIDTH];
+    for (int y = 0; y < HEIGHT; y++) {
+        for (int x = 0; x < WIDTH; x++) {
+            board[y][x] = ' '; // fondo
+        }
+    }
 
+    // Dibujar frutas
+    for (Fruit f : fruits) {
+        board[f.point.y][f.point.x] = 'F';
+    }
+
+    // Dibujar serpientes
+    for (Map.Entry<Integer, Snake> e : snakes.entrySet()) {
+        int pid = e.getKey();
+        LinkedList<Pt> body = e.getValue().points;
+        char symbol = (char) ('0' + (pid % 10)); // usa dígitos 0-9 para identificar jugadores
+        boolean head = true;
+        for (Pt p : body) {
+            if (head) {
+                board[p.y][p.x] = symbol; // cabeza
+                head = false;
+            } else {
+                board[p.y][p.x] = 's'; // cuerpo
+            }
+        }
+    }
+
+    // Convertir matriz a String
+    StringBuilder sb = new StringBuilder();
+    for (int y = 0; y < HEIGHT; y++) {
+        for (int x = 0; x < WIDTH; x++) {
+            sb.append(board[y][x]);
+        }
+        sb.append("\n");
+    }
+    return sb.toString();
+}
+  
   // Serializador muy simple a JSON (manual, sin librerías)
   public synchronized String toJson() {
     StringBuilder sb = new StringBuilder();
@@ -161,12 +209,12 @@ public class GameState {
     // snakes
     sb.append("\"snakes\":[");
     boolean firstSnake = true;
-    for (Map.Entry<Integer, LinkedList<Pt>> e : snakes.entrySet()) {
+    for (Map.Entry<Integer, Snake> e : snakes.entrySet()) {
       if (!firstSnake) sb.append(",");
       firstSnake = false;
       sb.append("{\"id\":").append(e.getKey()).append(",\"body\":[");
       boolean first = true;
-      for (Pt p : e.getValue()) {
+      for (Pt p : e.getValue().points) {
         if (!first) sb.append(",");
         first = false;
         sb.append("[").append(p.x).append(",").append(p.y).append("]");
@@ -177,10 +225,10 @@ public class GameState {
     // fruits
     sb.append("\"fruits\":[");
     boolean ffirst = true;
-    for (Pt f : fruits) {
+    for (Fruit f : fruits) {
       if (!ffirst) sb.append(",");
       ffirst = false;
-      sb.append("[").append(f.x).append(",").append(f.y).append("]");
+      sb.append("[").append(f.point.x).append(",").append(f.point.y).append("]");
     }
     sb.append("],");
     // scores

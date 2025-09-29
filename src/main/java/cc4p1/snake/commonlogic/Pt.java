@@ -4,21 +4,16 @@
  */
 package cc4p1.snake.commonlogic;
 
-import java.util.LinkedList;
-
 /**
  *
  * @author Albert
  */
-public class Snake {
-    //public int id;
-    public String name;
-    public int size = 1;
-    public LinkedList<Pt> points;
+public class Pt {
+    public int x, y;
+    public Pt(int x, int y){this.x=x; this.y=y;} 
     
-    public Snake(String name, LinkedList<Pt> points){
-        this.name = name;
-        this.points = points;
+    @Override
+    public String toString() {
+        return "(" + x + "," + y + ")";
     }
 }
-

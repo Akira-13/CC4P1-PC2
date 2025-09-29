@@ -3,9 +3,6 @@ import cc4p1.snake.client.ClientSession;
 import java.io.*;
 import java.net.*;
 import java.util.*;
-import java.io.*;
-import java.net.*;
-import java.util.*;
 import java.util.concurrent.*;
 
 /**
@@ -33,6 +30,8 @@ public class GameServer {
 
   public void start() throws IOException {
     serverSocket = new ServerSocket(port);
+    System.out.println("Servidor iniciado en puerto " + port);
+    
     // Hilo aceptador
     exec.execute(() -> {
       System.out.println("Accepting connections...");
@@ -72,6 +71,7 @@ public class GameServer {
       }
       // 2) avanzar el mundo
       state.step();
+      
       // 3) construir STATE y difundir
       String payload = "STATE " + state.toJson() + "\n";
       for (ClientSession cs : clients.values()) {

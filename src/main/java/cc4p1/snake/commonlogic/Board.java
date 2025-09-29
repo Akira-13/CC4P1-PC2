@@ -9,6 +9,6 @@ package cc4p1.snake.commonlogic;
  * @author Albert
  */
 public class Board {
-    public int width = 128;
-    public int height = 128;
+    public int width = 32;
+    public int height = 10;
 }
