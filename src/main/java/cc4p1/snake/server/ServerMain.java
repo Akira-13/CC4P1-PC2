@@ -1,6 +1,7 @@
 package cc4p1.snake.server;
 
 import cc4p1.snake.ui.GameWindow;
+import cc4p1.snake.ui.GameWindowClient;
 import java.io.*;
 import java.net.*;
 import java.util.*;
@@ -19,9 +20,9 @@ public class ServerMain {
         });
     }
     
-    public static void startServer(int port, GameWindow gameWindow) throws Exception{
+    public static void startServer(int port) throws Exception{
         System.out.println("Starting server on port " + port);
-        GameServer server = new GameServer(port, 10, gameWindow); // 10 ticks por segundo
+        GameServer server = new GameServer(port, 10); // 10 ticks por segundo
         server.start();
        
     }

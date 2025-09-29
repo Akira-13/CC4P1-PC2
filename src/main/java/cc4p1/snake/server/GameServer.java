@@ -1,9 +1,5 @@
 package cc4p1.snake.server;
 import cc4p1.snake.client.ClientSession;
-import cc4p1.snake.ui.GameWindow;
-import java.io.*;
-import java.net.*;
-import java.util.*;
 import java.io.*;
 import java.net.*;
 import java.util.*;
@@ -17,7 +13,6 @@ import java.util.concurrent.*;
  */
 
 public class GameServer {
-    private GameWindow gameWindow;
   private final int port;
   private final int tps;
   private final Map<Integer, ClientSession> clients = new ConcurrentHashMap<>();
@@ -28,14 +23,15 @@ public class GameServer {
   private ServerSocket serverSocket;
   private final ScheduledExecutorService exec = Executors.newScheduledThreadPool(4);
 
-  public GameServer(int port, int tps, GameWindow gameWindow) {
+  public GameServer(int port, int tps) {
     this.port = port;
     this.tps = tps;
-    this.gameWindow = gameWindow;
   }
 
   public void start() throws IOException {
     serverSocket = new ServerSocket(port);
+    System.out.println("Servidor iniciado en puerto " + port);
+    
     // Hilo aceptador
     exec.execute(() -> {
       System.out.println("Accepting connections...");
@@ -75,10 +71,7 @@ public class GameServer {
       }
       // 2) avanzar el mundo
       state.step();
-      // 2.1) Refrescar ventana
-      if (gameWindow != null) {
-        gameWindow.updateBoard(state.renderBoard());
-      }
+      
       // 3) construir STATE y difundir
       String payload = "STATE " + state.toJson() + "\n";
       for (ClientSession cs : clients.values()) {

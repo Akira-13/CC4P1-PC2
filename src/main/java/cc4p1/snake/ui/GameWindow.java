@@ -4,7 +4,10 @@
  */
 package cc4p1.snake.ui;
 
+import cc4p1.snake.client.GameClient;
 import cc4p1.snake.server.ServerMain;
+import java.net.Inet4Address;
+import java.net.UnknownHostException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.SwingUtilities;
@@ -13,16 +16,22 @@ import javax.swing.SwingUtilities;
  *
  * @author Albert
  */
-public class GameWindow extends javax.swing.JFrame {
-
+public class GameWindow extends javax.swing.JFrame implements IBoardUpdater{
+    private GameClient localClient;
+    private boolean serverStarted = false;
+    private boolean connected = false;
+    
     /**
-     * Creates new form GameWindow
+     * Creates new form GameWindowClient
      */
     public GameWindow() {
         initComponents();
-        setTitle("Snake Multijugador");
     }
-
+    
+    public void updateBoard(String boardText) {
+        SwingUtilities.invokeLater(() -> Board.setText(boardText));
+    }
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -32,66 +41,60 @@ public class GameWindow extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        IPInput = new javax.swing.JTextField();
-        PortInput = new javax.swing.JTextField();
-        jLabel1 = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
-        ConnectBtn = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         Board = new javax.swing.JTextArea();
-        RightBtn = new javax.swing.JButton();
-        LeftBtn = new javax.swing.JButton();
         UpBtn = new javax.swing.JButton();
+        LeftBtn = new javax.swing.JButton();
+        RightBtn = new javax.swing.JButton();
         DownBtn = new javax.swing.JButton();
-        jLabel3 = new javax.swing.JLabel();
-        UsernameInput = new javax.swing.JTextField();
         StartServerBtn = new javax.swing.JButton();
+        ConnectBtn = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setResizable(false);
-
-        IPInput.setBorder(null);
-
-        PortInput.setBorder(null);
-
-        jLabel1.setText("IP");
-
-        jLabel2.setText("PORT");
-
-        ConnectBtn.setText("CONNECT");
-        ConnectBtn.setFocusPainted(false);
-        ConnectBtn.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                ConnectBtnActionPerformed(evt);
-            }
-        });
 
         Board.setEditable(false);
         Board.setColumns(20);
         Board.setRows(5);
         jScrollPane1.setViewportView(Board);
 
-        RightBtn.setText(">");
-        RightBtn.setFocusPainted(false);
+        UpBtn.setText("^");
+        UpBtn.setFocusPainted(false);
+        UpBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                UpBtnActionPerformed(evt);
+            }
+        });
 
         LeftBtn.setText("<");
         LeftBtn.setFocusPainted(false);
 
-        UpBtn.setText("^");
-        UpBtn.setFocusPainted(false);
+        RightBtn.setText(">");
+        RightBtn.setFocusPainted(false);
+        RightBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                RightBtnActionPerformed(evt);
+            }
+        });
 
         DownBtn.setText("v");
         DownBtn.setFocusPainted(false);
-
-        jLabel3.setText("PLAYER");
-
-        UsernameInput.setBorder(null);
+        DownBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                DownBtnActionPerformed(evt);
+            }
+        });
 
         StartServerBtn.setText("START SERVER");
-        StartServerBtn.setFocusPainted(false);
         StartServerBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 StartServerBtnActionPerformed(evt);
+            }
+        });
+
+        ConnectBtn.setText("CONNECT");
+        ConnectBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ConnectBtnActionPerformed(evt);
             }
         });
 
@@ -99,99 +102,121 @@ public class GameWindow extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(20, 20, 20)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 408, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(30, 30, 30)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addComponent(LeftBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addComponent(RightBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addComponent(DownBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(29, 29, 29))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addComponent(UpBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(30, 30, 30))))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 19, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel2))
-                        .addGap(24, 24, 24)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(PortInput, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(110, 110, 110)
-                                .addComponent(ConnectBtn))
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(IPInput, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(39, 39, 39)
-                                .addComponent(jLabel3)
-                                .addGap(18, 18, 18)
-                                .addComponent(UsernameInput, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(82, 82, 82)
-                        .addComponent(StartServerBtn)))
-                .addContainerGap(26, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGap(24, 24, 24)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 408, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(27, 27, 27)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                            .addComponent(LeftBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGap(18, 18, 18)
+                            .addComponent(RightBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                            .addComponent(DownBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGap(29, 29, 29))
+                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                            .addComponent(UpBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGap(30, 30, 30)))
+                    .addComponent(StartServerBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(ConnectBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(17, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
+                .addGap(50, 50, 50)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(21, 21, 21)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 214, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap(36, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(StartServerBtn)
+                        .addGap(18, 18, 18)
+                        .addComponent(ConnectBtn)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(UpBtn)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel1)
-                            .addComponent(jLabel3)
-                            .addComponent(UsernameInput, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(IPInput, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(12, 12, 12)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(PortInput, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel2)
-                    .addComponent(ConnectBtn))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 214, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGap(35, 35, 35)
-                .addComponent(StartServerBtn)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(UpBtn)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(RightBtn)
-                    .addComponent(LeftBtn))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(DownBtn)
-                .addGap(70, 70, 70))
+                            .addComponent(RightBtn)
+                            .addComponent(LeftBtn))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(DownBtn)
+                        .addGap(64, 64, 64))))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-    
-    public void updateBoard(String boardText) {
-        SwingUtilities.invokeLater(() -> Board.setText(boardText));
-    }
-    
+
     private void StartServerBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_StartServerBtnActionPerformed
+        // TODO add your handling code here:
         try {
-            // TODO add your handling code here:
-            ServerMain.startServer(5000, this);
+            int port = 5000;
+            
+            ServerMain.startServer(port);
+            serverStarted = true;
             StartServerBtn.setEnabled(false);
-            ConnectBtn.setEnabled(false);
-        } catch (Exception ex) {
-            Logger.getLogger(GameWindow.class.getName()).log(Level.SEVERE, null, ex);
+            
+            Board.setText("Servidor iniciado en puerto " + port + "\nEsperando jugadores...");
+        } catch (Exception e) {
+            return;
         }
     }//GEN-LAST:event_StartServerBtnActionPerformed
 
+    private void UpBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_UpBtnActionPerformed
+        // TODO add your handling code here:
+        if (connected && localClient != null) {
+            localClient.sendDirection("UP");
+            Board.requestFocus();
+        }
+    }//GEN-LAST:event_UpBtnActionPerformed
+
+    private void RightBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_RightBtnActionPerformed
+        // TODO add your handling code here:
+        if (connected && localClient != null) {
+            localClient.sendDirection("RIGHT");
+            Board.requestFocus();
+        }
+    }//GEN-LAST:event_RightBtnActionPerformed
+
+    private void DownBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_DownBtnActionPerformed
+        // TODO add your handling code here:
+        if (connected && localClient != null) {
+            localClient.sendDirection("DOWN");
+            Board.requestFocus();
+        }
+    }//GEN-LAST:event_DownBtnActionPerformed
+
     private void ConnectBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ConnectBtnActionPerformed
         // TODO add your handling code here:
-        StartServerBtn.setEnabled(false);
+        if (!serverStarted) {
+            return;
+        }
+        
+        String host;
+        try {
+            host = Inet4Address.getLocalHost().getHostAddress();
+        } catch (UnknownHostException ex) {
+            Logger.getLogger(GameWindow.class.getName()).log(Level.SEVERE, null, ex);
+            return;
+        }
+        int port = 5000;
+        
+        try {            
+            // Esperar un momento para que el servidor esté listo
+            Thread.sleep(500);
+            
+            localClient = new GameClient(host, port, this);
+            localClient.start();
+            localClient.sendJoin("Server");
+            
+            connected = true;
+          
+            Board.requestFocus();
+            
+        } catch (Exception e) {
+            return;
+        }
     }//GEN-LAST:event_ConnectBtnActionPerformed
 
 
@@ -199,16 +224,10 @@ public class GameWindow extends javax.swing.JFrame {
     private javax.swing.JTextArea Board;
     private javax.swing.JButton ConnectBtn;
     private javax.swing.JButton DownBtn;
-    private javax.swing.JTextField IPInput;
     private javax.swing.JButton LeftBtn;
-    private javax.swing.JTextField PortInput;
     private javax.swing.JButton RightBtn;
     private javax.swing.JButton StartServerBtn;
     private javax.swing.JButton UpBtn;
-    private javax.swing.JTextField UsernameInput;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
     private javax.swing.JScrollPane jScrollPane1;
     // End of variables declaration//GEN-END:variables
 }

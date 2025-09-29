@@ -16,4 +16,9 @@ public class Fruit {
         this.point = point;
         this.score = fruitScore; 
     }
+    
+    @Override
+    public String toString() {
+        return "Fruit at " + point + " worth " + score;
+    }
 }

@@ -15,7 +15,7 @@ import java.util.*;
  */
 public class GameState {
   public static final int WIDTH = 32;
-  public static final int HEIGHT = 16;
+  public static final int HEIGHT = 10;
 
   // Punto simple
   //static class Pt { int x, y; Pt(int x, int y){this.x=x;this.y=y;} }
@@ -28,6 +28,8 @@ public class GameState {
 
   public GameState() {
     // spawn inicial de frutas
+    spawnFruit();
+    spawnFruit();
     spawnFruit();
     spawnFruit();
   }
@@ -162,11 +164,11 @@ public class GameState {
   // Renderizar tablero en TextArea
   public synchronized String renderBoard() {
     char[][] board = new char[HEIGHT][WIDTH];
-    /*for (int y = 0; y < HEIGHT; y++) {
+    for (int y = 0; y < HEIGHT; y++) {
         for (int x = 0; x < WIDTH; x++) {
-            board[y][x] = ' '; // fondo
+            board[y][x] = '.'; // fondo
         }
-    }*/
+    }
 
     // Dibujar frutas
     for (Fruit f : fruits) {

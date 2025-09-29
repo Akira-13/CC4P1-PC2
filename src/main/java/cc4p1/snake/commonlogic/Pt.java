@@ -11,4 +11,9 @@ package cc4p1.snake.commonlogic;
 public class Pt {
     public int x, y;
     public Pt(int x, int y){this.x=x; this.y=y;} 
+    
+    @Override
+    public String toString() {
+        return "(" + x + "," + y + ")";
+    }
 }
