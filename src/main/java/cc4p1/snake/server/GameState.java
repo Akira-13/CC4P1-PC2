@@ -166,7 +166,7 @@ public class GameState {
     char[][] board = new char[HEIGHT][WIDTH];
     for (int y = 0; y < HEIGHT; y++) {
         for (int x = 0; x < WIDTH; x++) {
-            board[y][x] = '.'; // fondo
+            board[y][x] = ' '; // fondo
         }
     }
 

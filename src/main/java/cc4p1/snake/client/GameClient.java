@@ -95,7 +95,7 @@ public class GameClient {
         // Inicializar tablero vacío
         for (int y = 0; y < HEIGHT; y++) {
             for (int x = 0; x < WIDTH; x++) {
-                board[y][x] = '.';
+                board[y][x] = ' ';
             }
         }
         

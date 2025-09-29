@@ -54,6 +54,7 @@ public class GameWindow extends javax.swing.JFrame implements IBoardUpdater{
 
         Board.setEditable(false);
         Board.setColumns(20);
+        Board.setFont(new java.awt.Font("Consolas", 0, 12)); // NOI18N
         Board.setRows(5);
         jScrollPane1.setViewportView(Board);
 
@@ -67,6 +68,11 @@ public class GameWindow extends javax.swing.JFrame implements IBoardUpdater{
 
         LeftBtn.setText("<");
         LeftBtn.setFocusPainted(false);
+        LeftBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                LeftBtnActionPerformed(evt);
+            }
+        });
 
         RightBtn.setText(">");
         RightBtn.setFocusPainted(false);
@@ -218,6 +224,14 @@ public class GameWindow extends javax.swing.JFrame implements IBoardUpdater{
             return;
         }
     }//GEN-LAST:event_ConnectBtnActionPerformed
+
+    private void LeftBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_LeftBtnActionPerformed
+        // TODO add your handling code here:
+        if (connected && localClient != null) {
+            localClient.sendDirection("LEFT");
+            Board.requestFocus();
+        }
+    }//GEN-LAST:event_LeftBtnActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

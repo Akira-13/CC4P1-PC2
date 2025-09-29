@@ -83,6 +83,7 @@ public class GameWindowClient extends javax.swing.JFrame implements IBoardUpdate
             }
         });
 
+        LeftBtn.setFont(new java.awt.Font("Consolas", 0, 12)); // NOI18N
         LeftBtn.setText("<");
         LeftBtn.setFocusPainted(false);
         LeftBtn.addActionListener(new java.awt.event.ActionListener() {
