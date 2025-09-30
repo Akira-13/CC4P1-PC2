@@ -6,6 +6,8 @@ package cc4p1.snake.ui;
 
 import cc4p1.snake.client.GameClient;
 import cc4p1.snake.server.ServerMain;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.net.Inet4Address;
 import java.net.UnknownHostException;
 import java.util.logging.Level;
@@ -16,7 +18,7 @@ import javax.swing.SwingUtilities;
  *
  * @author Albert
  */
-public class GameWindow extends javax.swing.JFrame implements IBoardUpdater{
+public class GameWindow extends javax.swing.JFrame implements IBoardUpdater, KeyListener{
     private GameClient localClient;
     private boolean serverStarted = false;
     private boolean connected = false;
@@ -26,6 +28,12 @@ public class GameWindow extends javax.swing.JFrame implements IBoardUpdater{
      */
     public GameWindow() {
         initComponents();
+        
+        // Configurando los KeyListener para las teclas de flecha
+        Board.addKeyListener(this);
+        Board.setFocusable(true);
+        this.addKeyListener(this);
+        this.setFocusable(true);
     }
     
     public void updateBoard(String boardText) {
@@ -237,6 +245,37 @@ public class GameWindow extends javax.swing.JFrame implements IBoardUpdater{
         }
     }//GEN-LAST:event_LeftBtnActionPerformed
 
+    // Implementación de KeyListener para las teclas de flecha
+    @Override
+    public void keyPressed(KeyEvent e) {
+        if (connected && localClient != null) {
+            switch (e.getKeyCode()) {
+                case KeyEvent.VK_UP:
+                    localClient.sendDirection("UP");
+                    break;
+                case KeyEvent.VK_DOWN:
+                    localClient.sendDirection("DOWN");
+                    break;
+                case KeyEvent.VK_LEFT:
+                    localClient.sendDirection("LEFT");
+                    break;
+                case KeyEvent.VK_RIGHT:
+                    localClient.sendDirection("RIGHT");
+                    break;
+            }
+            Board.requestFocus();
+        }
+    }
+    
+    @Override
+    public void keyReleased(KeyEvent e) {
+        // No necesitamos manejar cuando se suelta la tecla
+    }
+    
+    @Override
+    public void keyTyped(KeyEvent e) {
+        // No necesitamos manejar el typing de caracteres
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextArea Board;
