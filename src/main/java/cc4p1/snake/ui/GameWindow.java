@@ -157,7 +157,7 @@ public class GameWindow extends javax.swing.JFrame implements IBoardUpdater{
     private void StartServerBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_StartServerBtnActionPerformed
         // TODO add your handling code here:
         try {
-            int port = 5000;
+            int port = ServerMain.getCurrentPort();
             
             ServerMain.startServer(port);
             serverStarted = true;
@@ -165,7 +165,8 @@ public class GameWindow extends javax.swing.JFrame implements IBoardUpdater{
             
             Board.setText("Servidor iniciado en puerto " + port + "\nEsperando jugadores...");
         } catch (Exception e) {
-            return;
+            Board.setText("ERROR al iniciar servidor:\n" + e.getMessage() + "\n\nProbable causa: Puerto " + ServerMain.getCurrentPort() + " ocupado");
+            e.printStackTrace();
         }
     }//GEN-LAST:event_StartServerBtnActionPerformed
 
@@ -196,6 +197,7 @@ public class GameWindow extends javax.swing.JFrame implements IBoardUpdater{
     private void ConnectBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ConnectBtnActionPerformed
         // TODO add your handling code here:
         if (!serverStarted) {
+            Board.setText("ERROR: Primero debes iniciar el servidor");
             return;
         }
         
@@ -204,9 +206,10 @@ public class GameWindow extends javax.swing.JFrame implements IBoardUpdater{
             host = Inet4Address.getLocalHost().getHostAddress();
         } catch (UnknownHostException ex) {
             Logger.getLogger(GameWindow.class.getName()).log(Level.SEVERE, null, ex);
+            Board.setText("ERROR: No se puede obtener la dirección IP local\n" + ex.getMessage());
             return;
         }
-        int port = 5000;
+        int port = ServerMain.getCurrentPort();
         
         try {            
             // Esperar un momento para que el servidor esté listo
@@ -221,7 +224,8 @@ public class GameWindow extends javax.swing.JFrame implements IBoardUpdater{
             Board.requestFocus();
             
         } catch (Exception e) {
-            return;
+            Board.setText("ERROR al conectar al servidor:\n" + e.getMessage() + "\n\nServidor: " + host + ":" + port);
+            e.printStackTrace();
         }
     }//GEN-LAST:event_ConnectBtnActionPerformed
 

@@ -10,9 +10,12 @@ import java.util.concurrent.*;
 /**
  * Entry point del servidor. Uso: java ServerMain --port 5000
  */
-public class ServerMain {    
+public class ServerMain {
+    public static final int DEFAULT_PORT = 8000;
+    private static int currentPort = DEFAULT_PORT;
+    
     public static void main(String[] args) throws Exception {
-        int port = 5000;
+        currentPort = DEFAULT_PORT;
 
         java.awt.EventQueue.invokeLater(() -> {
             GameWindow gw = new GameWindow();
@@ -21,9 +24,17 @@ public class ServerMain {
     }
     
     public static void startServer(int port) throws Exception{
+        currentPort = port;
         System.out.println("Starting server on port " + port);
         GameServer server = new GameServer(port, 10); // 10 ticks por segundo
         server.start();
-       
+    }
+    
+    public static int getCurrentPort() {
+        return currentPort;
+    }
+    
+    public static void setCurrentPort(int port) {
+        currentPort = port;
     }
 }
