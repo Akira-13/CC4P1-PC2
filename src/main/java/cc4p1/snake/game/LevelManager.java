@@ -87,7 +87,7 @@ public class LevelManager {
         for (int y = 0; y < 12; y++) {
             for (int x = 0; x < 30; x++) {
                 if (y == 0 || y == 11 || x == 0 || x == 29) {
-                    map[y][x] = '['; // Paredes exteriores
+                    map[y][x] = '#'; // Paredes exteriores
                 } else {
                     map[y][x] = ' '; // Espacio libre
                 }

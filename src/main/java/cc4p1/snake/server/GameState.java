@@ -452,8 +452,8 @@ public class GameState {
       // Agregar leyenda de frutas
       sb.append("\nLeyenda de frutas:\n");
       sb.append("· = 1 pt | * = 2 pts | ♦ = 3 pts\n");
-      sb.append("Paredes: # (mortales) | Espacios abiertos (wrap-around)\n");
-      sb.append("Serpientes: O = cabeza | A,B,C... = cuerpo del jugador");
+      //sb.append("Paredes: # (mortales) | Espacios abiertos (wrap-around)\n");
+      //sb.append("Serpientes: O = cabeza | A,B,C... = cuerpo del jugador");
     }
 
     String result = sb.toString();
