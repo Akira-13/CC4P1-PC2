@@ -19,7 +19,7 @@ public class GameServer {
   private final Map<Integer, ClientSession> clients = new ConcurrentHashMap<>();
   private final GameState state = new GameState();
   private volatile boolean running = true;
-  private int nextPlayerId = 1;
+  public int nextPlayerId = 1;
 
   private ServerSocket serverSocket;
   private final ScheduledExecutorService exec = Executors.newScheduledThreadPool(4);
@@ -137,6 +137,7 @@ public class GameServer {
     clients.remove(playerId);
     state.removePlayer(playerId);
     System.out.println("Player quit: " + playerId);
+    nextPlayerId--;
   }
 
   private void shutdown() {
