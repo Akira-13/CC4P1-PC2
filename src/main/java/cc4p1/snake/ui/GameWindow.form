@@ -30,9 +30,9 @@
                   <Component id="jScrollPane2" max="32767" attributes="0"/>
                   <Component id="jScrollPane1" pref="329" max="32767" attributes="0"/>
               </Group>
-              <EmptySpace min="-2" pref="106" max="-2" attributes="0"/>
+              <EmptySpace min="-2" pref="50" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                  <Group type="103" groupAlignment="0" attributes="0">
+                  <Group type="103" alignment="0" groupAlignment="0" attributes="0">
                       <Group type="102" alignment="1" attributes="0">
                           <Component id="LeftBtn" min="-2" pref="42" max="-2" attributes="0"/>
                           <EmptySpace type="separate" max="-2" attributes="0"/>
@@ -47,10 +47,10 @@
                           <EmptySpace min="-2" pref="30" max="-2" attributes="0"/>
                       </Group>
                   </Group>
-                  <Component id="StartServerBtn" max="32767" attributes="0"/>
                   <Component id="ConnectBtn" alignment="0" max="32767" attributes="0"/>
+                  <Component id="StartServerBtn" alignment="0" pref="119" max="32767" attributes="0"/>
               </Group>
-              <EmptySpace pref="49" max="32767" attributes="0"/>
+              <EmptySpace pref="27" max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
