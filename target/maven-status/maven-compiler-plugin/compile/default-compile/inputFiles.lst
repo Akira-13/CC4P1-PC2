@@ -1,13 +1,14 @@
-D:\Computacion\Programacion Concurrente y Distribuida\CC4P1-PC2\src\main\java\cc4p1\snake\client\ClientMain.java
-D:\Computacion\Programacion Concurrente y Distribuida\CC4P1-PC2\src\main\java\cc4p1\snake\client\ClientSession.java
-D:\Computacion\Programacion Concurrente y Distribuida\CC4P1-PC2\src\main\java\cc4p1\snake\client\GameClient.java
-D:\Computacion\Programacion Concurrente y Distribuida\CC4P1-PC2\src\main\java\cc4p1\snake\commonlogic\Board.java
-D:\Computacion\Programacion Concurrente y Distribuida\CC4P1-PC2\src\main\java\cc4p1\snake\commonlogic\Fruit.java
-D:\Computacion\Programacion Concurrente y Distribuida\CC4P1-PC2\src\main\java\cc4p1\snake\commonlogic\Pt.java
-D:\Computacion\Programacion Concurrente y Distribuida\CC4P1-PC2\src\main\java\cc4p1\snake\commonlogic\Snake.java
-D:\Computacion\Programacion Concurrente y Distribuida\CC4P1-PC2\src\main\java\cc4p1\snake\server\GameServer.java
-D:\Computacion\Programacion Concurrente y Distribuida\CC4P1-PC2\src\main\java\cc4p1\snake\server\GameState.java
-D:\Computacion\Programacion Concurrente y Distribuida\CC4P1-PC2\src\main\java\cc4p1\snake\server\ServerMain.java
-D:\Computacion\Programacion Concurrente y Distribuida\CC4P1-PC2\src\main\java\cc4p1\snake\ui\GameWindow.java
-D:\Computacion\Programacion Concurrente y Distribuida\CC4P1-PC2\src\main\java\cc4p1\snake\ui\GameWindowClient.java
-D:\Computacion\Programacion Concurrente y Distribuida\CC4P1-PC2\src\main\java\cc4p1\snake\ui\IBoardUpdater.java
+C:\Users\gabri\Downloads\prueba 2\CC4P1-PC2\src\main\java\cc4p1\snake\client\ClientMain.java
+C:\Users\gabri\Downloads\prueba 2\CC4P1-PC2\src\main\java\cc4p1\snake\client\ClientSession.java
+C:\Users\gabri\Downloads\prueba 2\CC4P1-PC2\src\main\java\cc4p1\snake\client\GameClient.java
+C:\Users\gabri\Downloads\prueba 2\CC4P1-PC2\src\main\java\cc4p1\snake\commonlogic\Board.java
+C:\Users\gabri\Downloads\prueba 2\CC4P1-PC2\src\main\java\cc4p1\snake\commonlogic\Fruit.java
+C:\Users\gabri\Downloads\prueba 2\CC4P1-PC2\src\main\java\cc4p1\snake\commonlogic\Pt.java
+C:\Users\gabri\Downloads\prueba 2\CC4P1-PC2\src\main\java\cc4p1\snake\commonlogic\Snake.java
+C:\Users\gabri\Downloads\prueba 2\CC4P1-PC2\src\main\java\cc4p1\snake\game\LevelManager.java
+C:\Users\gabri\Downloads\prueba 2\CC4P1-PC2\src\main\java\cc4p1\snake\server\GameServer.java
+C:\Users\gabri\Downloads\prueba 2\CC4P1-PC2\src\main\java\cc4p1\snake\server\GameState.java
+C:\Users\gabri\Downloads\prueba 2\CC4P1-PC2\src\main\java\cc4p1\snake\server\ServerMain.java
+C:\Users\gabri\Downloads\prueba 2\CC4P1-PC2\src\main\java\cc4p1\snake\ui\GameWindow.java
+C:\Users\gabri\Downloads\prueba 2\CC4P1-PC2\src\main\java\cc4p1\snake\ui\GameWindowClient.java
+C:\Users\gabri\Downloads\prueba 2\CC4P1-PC2\src\main\java\cc4p1\snake\ui\IBoardUpdater.java
