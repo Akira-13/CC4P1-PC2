@@ -10,4 +10,6 @@ package cc4p1.snake.ui;
  */
 public interface IBoardUpdater {
     void updateBoard(String boardText);
+
+    void updateScores(String scoresText);
 }

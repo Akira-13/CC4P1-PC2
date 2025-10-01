@@ -15,10 +15,12 @@ public class Snake {
     public String name;
     public int size = 1;
     public LinkedList<Pt> points;
+    public int growthPending = 0; // Segmentos pendientes de crecimiento
     
     public Snake(String name, LinkedList<Pt> points){
         this.name = name;
         this.points = points;
+        this.growthPending = 0;
     }
 }
 

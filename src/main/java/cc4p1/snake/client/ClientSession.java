@@ -72,6 +72,9 @@ public class ClientSession {
                     } else if (line.startsWith("INPUT ")) {
                         String dir = line.substring(6).trim();
                         server.onInput(playerId, dir);
+                    } else if (line.startsWith("LEVEL ")) {
+                        String levelCmd = line.substring(6).trim();
+                        server.onLevelCommand(playerId, levelCmd);
                     } else if (line.equals("QUIT")) {
                         server.onQuit(playerId);
                         break;

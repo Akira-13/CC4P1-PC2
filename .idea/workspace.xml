@@ -4,7 +4,23 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="4556a633-f6c3-4293-b929-41dc988284e4" name="Changes" comment="" />
+    <list default="true" id="4556a633-f6c3-4293-b929-41dc988284e4" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/target/classes/cc4p1/snake/ui/GameWindow.form" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/cc4p1/snake/ui/GameWindowClient.form" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/cc4p1/snake/client/ClientSession.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/cc4p1/snake/client/ClientSession.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/cc4p1/snake/client/GameClient.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/cc4p1/snake/client/GameClient.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/cc4p1/snake/server/GameServer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/cc4p1/snake/server/GameServer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/cc4p1/snake/server/GameState.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/cc4p1/snake/server/GameState.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/cc4p1/snake/ui/GameWindow.form" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/cc4p1/snake/ui/GameWindow.form" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/cc4p1/snake/ui/GameWindow.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/cc4p1/snake/ui/GameWindow.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/cc4p1/snake/ui/GameWindowClient.form" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/cc4p1/snake/ui/GameWindowClient.form" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/cc4p1/snake/ui/GameWindowClient.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/cc4p1/snake/ui/GameWindowClient.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/cc4p1/snake/ui/IBoardUpdater.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/cc4p1/snake/ui/IBoardUpdater.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/maven-archiver/pom.properties" beforeDir="false" afterPath="$PROJECT_DIR$/target/maven-archiver/pom.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" beforeDir="false" afterPath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" beforeDir="false" afterPath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -13,33 +29,33 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="ProjectColorInfo"><![CDATA[{
-  "associatedIndex": 3
-}]]></component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 3
+}</component>
   <component name="ProjectId" id="33ObzEln3OiPlSpTWEKXhcqF853" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Application.ClientMain.executor": "Run",
-    "Application.ServerMain.executor": "Run",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "git-widget-placeholder": "feature/client",
-    "ignore.virus.scanning.warn.message": "true",
-    "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "C:/Users/gabri/Downloads/prueba 2/CC4P1-PC2",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Application.ClientMain.executor&quot;: &quot;Run&quot;,
+    &quot;Application.ServerMain.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;feature/design-maze&quot;,
+    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/gabri/Downloads/prueba 2/CC4P1-PC2&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
-  <component name="RunManager" selected="Application.ClientMain">
+}</component>
+  <component name="RunManager" selected="Application.ServerMain">
     <configuration name="ClientMain" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="cc4p1.snake.client.ClientMain" />
       <module name="pc1_snake" />
@@ -90,6 +106,8 @@
       <option name="presentableId" value="Default" />
       <updated>1759191325395</updated>
       <workItem from="1759191326563" duration="1289000" />
+      <workItem from="1759291102542" duration="118000" />
+      <workItem from="1759292515376" duration="220000" />
     </task>
     <servers />
   </component>

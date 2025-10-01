@@ -13,7 +13,7 @@ import java.util.concurrent.*;
 public class ServerMain {
     public static final int DEFAULT_PORT = 8000;
     private static int currentPort = DEFAULT_PORT;
-    
+
     public static void main(String[] args) throws Exception {
         currentPort = DEFAULT_PORT;
 
@@ -22,18 +22,18 @@ public class ServerMain {
             gw.setVisible(true);
         });
     }
-    
-    public static void startServer(int port) throws Exception{
+
+    public static void startServer(int port) throws Exception {
         currentPort = port;
         System.out.println("Starting server on port " + port);
-        GameServer server = new GameServer(port, 7); //  7 ticks por segundo
+        GameServer server = new GameServer(port, 7); // 7 ticks por segundo
         server.start();
     }
-    
+
     public static int getCurrentPort() {
         return currentPort;
     }
-    
+
     public static void setCurrentPort(int port) {
         currentPort = port;
     }
