@@ -27,11 +27,11 @@ import java.util.*;
  * la lógica más completa al módulo core/ y añadir tests.
  */
 public class GameState {
-  public static final int WIDTH = 28; // Área de juego: 28 caracteres
+  public static final int WIDTH = 30; // Área de juego: 28 caracteres
   public static final int HEIGHT = 10; // Área interna: 10 líneas (archivos nivel = 12, bordes incluidos)
 
   // Sistema de paredes: true = hay pared, false = espacio abierto (wrap-around)
-  private final boolean[][] walls = new boolean[12][30]; // Tamaño exacto de archivos de nivel
+  private final boolean[][] walls = new boolean[12][32]; // Tamaño exacto de archivos de nivel
 
   // Gestor de niveles
   private final LevelManager levelManager;
@@ -57,8 +57,8 @@ public class GameState {
 
   private void initializeWalls() {
     // Inicializar todas las posiciones como espacios libres (dimensiones exactas)
-    for (int y = 0; y < 12; y++) {
-      for (int x = 0; x < 30; x++) {
+    for (int y = 0; y < HEIGHT + 2; y++) {
+      for (int x = 0; x < WIDTH + 2; x++) {
         walls[y][x] = false;
       }
     }
@@ -73,7 +73,7 @@ public class GameState {
 
     // Adaptar el mapa cargado a nuestro sistema de paredes (tamaño exacto)
     int mapHeight = Math.min(levelMap.length, 12);
-    int mapWidth = levelMap.length > 0 ? Math.min(levelMap[0].length, 30) : 0;
+    int mapWidth = levelMap.length > 0 ? Math.min(levelMap[0].length, 32) : 0;
 
     for (int y = 0; y < mapHeight; y++) {
       StringBuilder rowDebug = new StringBuilder();
@@ -99,8 +99,8 @@ public class GameState {
 
   public synchronized void addPlayer(int id, String name) {
     // coloca la serpiente en una posición no colisionada
-    int x = rand.nextInt(WIDTH);
-    int y = rand.nextInt(HEIGHT);
+    int x = rand.nextInt(1,WIDTH);
+    int y = rand.nextInt(1,HEIGHT);
 
     LinkedList<Pt> body = new LinkedList<>();
     body.add(new Pt(x, y));
@@ -334,8 +334,8 @@ public class GameState {
 
   private synchronized void spawnFruit() {
     for (int tries = 0; tries < 20; tries++) {
-      int x = rand.nextInt(WIDTH);
-      int y = rand.nextInt(HEIGHT);
+      int x = rand.nextInt(1,WIDTH);
+      int y = rand.nextInt(1,HEIGHT);
       int fruitScore = rand.nextInt(1, 4); // Frutas de 1 a 3 puntos para crecimiento más equilibrado
 
       // Verificar que no esté en una pared
@@ -367,7 +367,7 @@ public class GameState {
   public synchronized String renderBoard() {
     // El tablero usa dimensiones exactas de 12x30 para coincidir con nivel y
     // TextArea
-    int displayWidth = 30;
+    int displayWidth = 32;
     int displayHeight = 12;
     char[][] board = new char[displayHeight][displayWidth];
 
@@ -386,17 +386,17 @@ public class GameState {
 
     // Dibujar frutas con diferentes símbolos según puntuación
     for (Fruit f : fruits) {
-      char fruitSymbol;
+      //char fruitSymbol;
       // Diferentes símbolos según la puntuación de la fruta (1-3 puntos)
-      if (f.score == 1) {
-        fruitSymbol = '·'; // Fruta pequeña (1 punto)
-      } else if (f.score == 2) {
-        fruitSymbol = '*'; // Fruta mediana (2 puntos)
-      } else { // f.score == 3
-        fruitSymbol = '♦'; // Fruta grande (3 puntos)
-      }
+      //if (f.score == 1) {
+      //  fruitSymbol = '·'; // Fruta pequeña (1 punto)
+      //} else if (f.score == 2) {
+      //  fruitSymbol = '*'; // Fruta mediana (2 puntos)
+      //} else { // f.score == 3
+      //  fruitSymbol = '♦'; // Fruta grande (3 puntos)
+      //}
       // Las frutas se dibujan directamente en sus coordenadas (sin offset)
-      board[f.point.y][f.point.x] = fruitSymbol;
+      board[f.point.y][f.point.x] = (char) ( '0' + f.score);
     }
 
     // Dibujar serpientes
@@ -450,8 +450,8 @@ public class GameState {
       }
 
       // Agregar leyenda de frutas
-      sb.append("\nLeyenda de frutas:\n");
-      sb.append("· = 1 pt | * = 2 pts | ♦ = 3 pts\n");
+      //sb.append("\nLeyenda de frutas:\n");
+      //sb.append("· = 1 pt | * = 2 pts | ♦ = 3 pts\n");
       //sb.append("Paredes: # (mortales) | Espacios abiertos (wrap-around)\n");
       //sb.append("Serpientes: O = cabeza | A,B,C... = cuerpo del jugador");
     }
