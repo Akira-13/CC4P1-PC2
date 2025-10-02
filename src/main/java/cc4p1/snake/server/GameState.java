@@ -27,11 +27,9 @@ import java.util.*;
  * la lógica más completa al módulo core/ y añadir tests.
  */
 public class GameState {
-  public static final int WIDTH = 32; // Área de juego: 28 caracteres
-  public static final int HEIGHT = 12; // Área interna: 10 líneas (archivos nivel = 12, bordes incluidos)
-
-  // Sistema de paredes: true = hay pared, false = espacio abierto (wrap-around)
-  private final boolean[][] walls = new boolean[12][32]; // Tamaño exacto de archivos de nivel
+    private int WIDTH;               // dimensiones dinámicas según el nivel
+    private int HEIGHT;
+    private boolean[][] walls;  // Tamaño exacto de archivos de nivel
 
   // Gestor de niveles
   private final LevelManager levelManager;
@@ -45,64 +43,48 @@ public class GameState {
   private final List<Fruit> fruits = new ArrayList<>();
   private final Random rand = new Random();
   private final Map<Integer, Integer> growLeft = new HashMap<>();
+  
+  private int maxFruits = 1; // por nivel
+
 
   public GameState() {
     this.levelManager = new LevelManager();
     initializeWalls();
     // spawn inicial de frutas
-    spawnFruit();
-    spawnFruit();
-    spawnFruit();
-    spawnFruit();
+    fillFruitsToMax();
   }
 
-  private void initializeWalls() {
-    // Inicializar todas las posiciones como espacios libres (dimensiones exactas)
-    for (int y = 0; y < HEIGHT; y++) {
-      for (int x = 0; x < WIDTH; x++) {
-        walls[y][x] = false;
-      }
-    }
+    private void initializeWalls() {
+      char[][] levelMap = levelManager.getCurrentLevel();
 
-    // Cargar nivel desde archivo
-    char[][] levelMap = levelManager.getCurrentLevel();
-    System.out.println("=== DEBUG: Inicializando paredes ===");
-    System.out.println("Nivel cargado: " + levelMap.length + " filas");
-    if (levelMap.length > 0) {
-      System.out.println("Primera fila tiene " + levelMap[0].length + " columnas");
-    }
+      // Dimensiones reales desde el archivo del nivel
+      HEIGHT = levelMap.length;
+      WIDTH  = (HEIGHT > 0 ? levelMap[0].length : 0);
 
-    // Adaptar el mapa cargado a nuestro sistema de paredes (tamaño exacto)
-    int mapHeight = Math.min(levelMap.length, walls.length);
-    int mapWidth = levelMap.length > 0 ? Math.min(levelMap[0].length, walls[0].length) : 0;
+      // Crear matriz de paredes con el tamaño exacto del nivel
+      walls = new boolean[HEIGHT][WIDTH];
 
-    for (int y = 0; y < mapHeight; y++) {
-      StringBuilder rowDebug = new StringBuilder();
-      for (int x = 0; x < mapWidth; x++) {
-        // '#' representa paredes, ' ' espacios libres
-        char cell = levelMap[y][x];
-        walls[y][x] = (cell == '#');
-        rowDebug.append(cell);
-        if (y < 3 || y >= mapHeight - 3 || x < 3 || x >= mapWidth - 3) {
-          // Debug solo para bordes para ver qué está pasando
-          if (walls[y][x]) {
-            System.out.println("Pared detectada en (" + x + "," + y + ") caracter: '" + cell + "'");
-          }
+      // Copiar paredes: '#' = true
+      for (int y = 0; y < HEIGHT; y++) {
+        for (int x = 0; x < WIDTH; x++) {
+          walls[y][x] = (levelMap[y][x] == '#');
         }
       }
-      // Mostrar las primeras y últimas filas completas para debug
-      if (y < 2 || y >= mapHeight - 2) {
-        System.out.println("Fila " + y + ": '" + rowDebug.toString() + "'");
-      }
+      
+      this.maxFruits = levelManager.getCurrentMaxFruits();
+
+      System.out.println("=== DEBUG paredes ===");
+      System.out.println("Level size: " + WIDTH + "x" + HEIGHT);
+      System.out.println("=== FIN DEBUG paredes ===");
     }
-    System.out.println("=== FIN DEBUG paredes ===");
-  }
+
 
   public synchronized void addPlayer(int id, String name) {
     // coloca la serpiente en una posición no colisionada
 
-    int x = rand.nextInt(1,WIDTH-1);
-    int y = rand.nextInt(1,HEIGHT-1);
+    int x = rand.nextInt(1, WIDTH-1);
+    int y = rand.nextInt(1, HEIGHT-1);
+
 
 
     LinkedList<Pt> body = new LinkedList<>();
@@ -345,49 +327,45 @@ public class GameState {
       // Si prefieres mantener score, comenta la línea anterior.
     }
 
-    // Mantener al menos una fruta
-    if (fruits.size() < 1)
-      spawnFruit();
-  }
-
-  private synchronized void spawnFruit() {
-    for (int tries = 0; tries < 20; tries++) {
-      int x = rand.nextInt(1, WIDTH);
-      int y = rand.nextInt(1, HEIGHT);
-      int fruitScore = rand.nextInt(1, 4); // Frutas de 1 a 3 puntos para crecimiento más equilibrado
-
-      // Verificar que no esté en una pared
-      if (walls[y][x]) {
-        continue; // Intentar otra posición
-      }
-
-      boolean occ = false;
-      for (Snake snake : snakes.values()) {
-        for (Pt p : snake.points)
-          if (p.x == x && p.y == y) {
-            occ = true;
-            break;
-          }
-        if (occ)
-          break;
-      }
-      if (!occ) {
-        fruits.add(new Fruit(new Pt(x, y), fruitScore));
-        System.out.println("Generada nueva fruta en (" + x + "," + y + ") con " + fruitScore + " puntos");
-        return;
-      }
+    // Mantener la cantidad objetivo del nivel
+    while (fruits.size() < maxFruits) {
+        if (!spawnFruit()) break; // evita bucles infinitos si no hay espacio
     }
-    // si no encontró sitio, no hace nada
-    System.out.println("No se pudo generar fruta después de 20 intentos");
+
   }
+
+private synchronized boolean spawnFruit() {
+    for (int tries = 0; tries < Math.max(20, WIDTH*HEIGHT); tries++) {
+        int x = rand.nextInt(1, WIDTH-1);
+        int y = rand.nextInt(1, HEIGHT-1);
+        int fruitScore = rand.nextInt(1, 4);
+
+        if (walls[y][x]) continue;
+
+        boolean occ = false;
+        for (Snake snake : snakes.values()) {
+            for (Pt p : snake.points) if (p.x == x && p.y == y) { occ = true; break; }
+            if (occ) break;
+        }
+        if (!occ) {
+            fruits.add(new Fruit(new Pt(x, y), fruitScore));
+            System.out.println("Generada nueva fruta en (" + x + "," + y + ") con " + fruitScore + " puntos");
+            return true;
+        }
+    }
+    System.out.println("No se pudo generar fruta tras múltiples intentos");
+    return false;
+}
+
 
   // Renderizar tablero en TextArea con sistema de paredes reales
   public synchronized String renderBoard() {
     // El tablero usa dimensiones exactas de 12x30 para coincidir con nivel y
     // TextArea
-    int displayWidth = 32;
-    int displayHeight = 12;
+    int displayWidth  = WIDTH;
+    int displayHeight = HEIGHT;
     char[][] board = new char[displayHeight][displayWidth];
+
 
     // Inicializar el tablero basado en el sistema de paredes
     for (int y = 0; y < displayHeight; y++) {
@@ -475,50 +453,67 @@ public class GameState {
   }
 
   // Serializador muy simple a JSON (manual, sin librerías)
-  public synchronized String toJson() {
+public synchronized String toJson() {
     StringBuilder sb = new StringBuilder();
     sb.append("{");
+
     // snakes
     sb.append("\"snakes\":[");
     boolean firstSnake = true;
     for (Map.Entry<Integer, Snake> e : snakes.entrySet()) {
-      if (!firstSnake)
-        sb.append(",");
+      if (!firstSnake) sb.append(",");
       firstSnake = false;
       sb.append("{\"id\":").append(e.getKey()).append(",\"body\":[");
       boolean first = true;
       for (Pt p : e.getValue().points) {
-        if (!first)
-          sb.append(",");
+        if (!first) sb.append(",");
         first = false;
         sb.append("[").append(p.x).append(",").append(p.y).append("]");
       }
-      sb.append("]}");
+        sb.append("]}");
     }
     sb.append("],");
+
     // fruits
     sb.append("\"fruits\":[");
     boolean ffirst = true;
     for (Fruit f : fruits) {
-      if (!ffirst)
-        sb.append(",");
-      ffirst = false;
-      sb.append("[").append(f.point.x).append(",").append(f.point.y).append("]");
+        if (!ffirst) sb.append(",");
+        ffirst = false;
+        sb.append("[").append(f.point.x).append(",").append(f.point.y).append("]");
     }
     sb.append("],");
+
     // scores
     sb.append("\"scores\":{");
     boolean sfirst = true;
     for (Map.Entry<Integer, Integer> e : scores.entrySet()) {
-      if (!sfirst)
-        sb.append(",");
-      sfirst = false;
-      sb.append("\"").append(e.getKey()).append("\":").append(e.getValue());
+        if (!sfirst) sb.append(",");
+        sfirst = false;
+        sb.append("\"").append(e.getKey()).append("\":").append(e.getValue());
     }
-    sb.append("}");
-    sb.append("}");
+    sb.append("},");
+
+    // dimensiones
+    sb.append("\"width\":").append(WIDTH).append(",\"height\":").append(HEIGHT).append(",");
+
+    // paredes
+    sb.append("\"walls\":[");
+    boolean firstWall = true;
+    for (int y = 0; y < HEIGHT; y++) {
+        for (int x = 0; x < WIDTH; x++) {
+            if (walls[y][x]) {
+                if (!firstWall) sb.append(",");
+                firstWall = false;
+                sb.append("[").append(x).append(",").append(y).append("]");
+            }
+        }
+    }
+    sb.append("]}"); // ← cierra walls y el objeto raíz
+
     return sb.toString();
-  }
+    }
+
 
   public synchronized String scoresJson() {
     StringBuilder sb = new StringBuilder();
@@ -537,37 +532,43 @@ public class GameState {
   /**
    * Cambia al siguiente nivel
    */
-  public synchronized void nextLevel() {
-    levelManager.nextLevel();
-    initializeWalls();
-    // Limpiar frutas y generar nuevas
-    fruits.clear();
-    spawnFruit();
-    spawnFruit();
-    spawnFruit();
-    spawnFruit();
-    System.out.println("Cambiado a nivel " + levelManager.getCurrentLevelNumber());
-  }
+    public synchronized void nextLevel() {
+      levelManager.nextLevel();
+      initializeWalls();
+      // Limpiar frutas y generar nuevas
+      fruits.clear();
+      fillFruitsToMax();
+      System.out.println("Cambiado a nivel " + levelManager.getCurrentLevelNumber());
+    }
 
   /**
    * Establece un nivel específico
    */
-  public synchronized void setLevel(int levelNumber) {
-    levelManager.setLevel(levelNumber);
-    initializeWalls();
-    // Limpiar frutas y generar nuevas
-    fruits.clear();
-    spawnFruit();
-    spawnFruit();
-    spawnFruit();
-    spawnFruit();
-    System.out.println("Nivel establecido: " + levelNumber);
-  }
+    public synchronized void setLevel(int levelNumber) {
+      levelManager.setLevel(levelNumber);
+      initializeWalls();
+      // Limpiar frutas y generar nuevas
+      fruits.clear();
+      fillFruitsToMax();
+      System.out.println("Nivel establecido: " + levelNumber);
+    }
 
   /**
    * Obtiene información del nivel actual
    */
-  public String getCurrentLevelInfo() {
-    return "Nivel " + levelManager.getCurrentLevelNumber() + " de " + levelManager.getTotalLevels();
-  }
+    public String getCurrentLevelInfo() {
+      return "Nivel " + levelManager.getCurrentLevelNumber() + " de " + levelManager.getTotalLevels();
+    }
+  
+    private void fillFruitsToMax() {
+        int guard = WIDTH * HEIGHT; // corta en escenarios sin espacio
+        while (fruits.size() < maxFruits && guard-- > 0) {
+            if (!spawnFruit()) break;
+        }
+    }
+    
+    public int getCurrentTickRateHz() { return levelManager.getCurrentTickRateHz(); }
+
+
+
 }
