@@ -27,8 +27,8 @@ import java.util.*;
  * la lógica más completa al módulo core/ y añadir tests.
  */
 public class GameState {
-  public static final int WIDTH = 30; // Área de juego: 28 caracteres
-  public static final int HEIGHT = 10; // Área interna: 10 líneas (archivos nivel = 12, bordes incluidos)
+  public static final int WIDTH = 32; // Área de juego: 28 caracteres
+  public static final int HEIGHT = 12; // Área interna: 10 líneas (archivos nivel = 12, bordes incluidos)
 
   // Sistema de paredes: true = hay pared, false = espacio abierto (wrap-around)
   private final boolean[][] walls = new boolean[12][32]; // Tamaño exacto de archivos de nivel
@@ -44,6 +44,7 @@ public class GameState {
   private final Map<Integer, Integer> scores = new HashMap<>();
   private final List<Fruit> fruits = new ArrayList<>();
   private final Random rand = new Random();
+  private final Map<Integer, Integer> growLeft = new HashMap<>();
 
   public GameState() {
     this.levelManager = new LevelManager();
@@ -57,8 +58,8 @@ public class GameState {
 
   private void initializeWalls() {
     // Inicializar todas las posiciones como espacios libres (dimensiones exactas)
-    for (int y = 0; y < HEIGHT + 2; y++) {
-      for (int x = 0; x < WIDTH + 2; x++) {
+    for (int y = 0; y < HEIGHT; y++) {
+      for (int x = 0; x < WIDTH; x++) {
         walls[y][x] = false;
       }
     }
@@ -72,8 +73,8 @@ public class GameState {
     }
 
     // Adaptar el mapa cargado a nuestro sistema de paredes (tamaño exacto)
-    int mapHeight = Math.min(levelMap.length, 12);
-    int mapWidth = levelMap.length > 0 ? Math.min(levelMap[0].length, 32) : 0;
+    int mapHeight = Math.min(levelMap.length, walls.length);
+    int mapWidth = levelMap.length > 0 ? Math.min(levelMap[0].length, walls[0].length) : 0;
 
     for (int y = 0; y < mapHeight; y++) {
       StringBuilder rowDebug = new StringBuilder();
@@ -99,8 +100,10 @@ public class GameState {
 
   public synchronized void addPlayer(int id, String name) {
     // coloca la serpiente en una posición no colisionada
-    int x = rand.nextInt(1, WIDTH);
-    int y = rand.nextInt(1, HEIGHT);
+
+    int x = rand.nextInt(1,WIDTH-1);
+    int y = rand.nextInt(1,HEIGHT-1);
+
 
     LinkedList<Pt> body = new LinkedList<>();
     body.add(new Pt(x, y));
@@ -110,12 +113,14 @@ public class GameState {
     snakes.put(id, new Snake(name, body, bodyLetter));
     directions.put(id, "RIGHT");
     scores.put(id, 0);
+    growLeft.put(id, 0); 
   }
 
   public synchronized void removePlayer(int id) {
     snakes.remove(id);
     directions.remove(id);
     scores.remove(id);
+    growLeft.remove(id);
   }
 
   public synchronized void applyInput(int id, String dir) {
@@ -278,70 +283,60 @@ public class GameState {
         directions.remove(id);
         continue;
       }
-      LinkedList<Pt> body = e.getValue().points;
-      Pt nh = newHeads.get(id);
-      if (nh == null) {
-        // No debería pasar, pero por seguridad
-        System.err.println("Error: newHead es null para jugador " + id);
-        dead.add(id);
-        snakes.remove(id);
-        directions.remove(id);
-        continue;
+    LinkedList<Pt> body = e.getValue().points;
+    Pt nh = newHeads.get(id);
+    if (nh == null) {
+      System.err.println("Error: newHead es null para jugador " + id);
+      dead.add(id);
+      snakes.remove(id);
+      directions.remove(id);
+      continue;
+    }
+
+
+    body.addFirst(nh);
+
+    // --- detectar fruta en la nueva cabeza ---
+    boolean ate = false;
+    int fruitScore = 0;
+    Iterator<Fruit> fIt = fruits.iterator();
+    while (fIt.hasNext()) {
+      Fruit fruit = fIt.next();
+      if (fruit.point.x == nh.x && fruit.point.y == nh.y) {
+        ate = true;
+        fruitScore = fruit.score;
+        fIt.remove();
+        break;
       }
+    }
 
-      body.addFirst(nh);
+    if (ate) {
+      // Mantén SOLO un contador de crecimiento pendiente; no “regales” un +1 inmediato.
+      scores.put(id, scores.getOrDefault(id, 0) + fruitScore);
+      Snake currentSnake = e.getValue();
+      currentSnake.growthPending = currentSnake.growthPending + fruitScore;
 
-      // si comió fruta -> no quitar cola y +score según fruta
-      boolean ate = false;
-      int fruitScore = 0;
-      Iterator<Fruit> fIt = fruits.iterator();
-      while (fIt.hasNext()) {
-        Fruit fruit = fIt.next();
-        if (fruit.point.x == nh.x && fruit.point.y == nh.y) {
-          ate = true;
-          fruitScore = fruit.score;
-          fIt.remove();
-          break;
-        }
-      }
-      if (ate) {
-        scores.put(id, scores.getOrDefault(id, 0) + fruitScore);
-        System.out.println(
-            "Jugador " + id + " comió fruta con " + fruitScore + " puntos. Puntuación total: " + scores.get(id));
+      System.out.println(
+          "Jugador " + id + " comió fruta con " + fruitScore + " puntos. Puntuación total: " + scores.get(id));
+      // Nota: body.size() ya incluye la cabeza; no sumes +1 aquí.
+      System.out.println("Estado serpiente " + id + " - Tamaño total: " + body.size() +
+                         ", Crecimiento pendiente: " + currentSnake.growthPending);
 
-        // No quitar cola para que crezca naturalmente
-        // Y además no quitar cola las próximas (fruitScore-1) veces para que crezca más
-        // Esto se maneja con un contador de crecimiento pendiente
-        Snake currentSnake = e.getValue();
-        currentSnake.growthPending = currentSnake.growthPending + fruitScore;
+      spawnFruit();
+    }
 
-        // Debug: mostrar estado actual de la serpiente
-        int totalSize = 1 + currentSnake.points.size(); // cabeza + cuerpo
-        System.out.println("Estado serpiente " + id + " - Puntuación: " + scores.get(id) +
-            ", Tamaño total: " + totalSize +
-            ", Crecimiento pendiente: " + currentSnake.growthPending);
-
-        System.out.println(
-            "Serpiente del jugador " + id + " crecerá " + fruitScore + " segmentos en los próximos movimientos");
-
-        // generar una fruta nueva
-        spawnFruit();
-      } else {
-        // avanzar: quitar cola solo si no hay crecimiento pendiente
-        Snake currentSnake = e.getValue();
-        if (currentSnake.growthPending > 0) {
-          // No quitar cola, pero reducir contador
-          currentSnake.growthPending--;
-          int totalSize = 1 + body.size(); // cabeza + cuerpo
-          System.out.println("Jugador " + id + " creció 1 segmento. Tamaño actual: " + totalSize +
-              ", Crecimiento pendiente: " + currentSnake.growthPending +
-              ", Puntuación: " + scores.getOrDefault(id, 0));
-        } else {
-          // Movimiento normal: quitar cola
-          if (body.size() > 0)
-            body.removeLast();
-        }
-      }
+    // --- REGLA ÚNICA DE COLA (aplica SIEMPRE, se haya comido o no) ---
+    Snake currentSnake = e.getValue();
+    if (currentSnake.growthPending > 0) {
+      // Este tick “crece” manteniendo la cola
+      currentSnake.growthPending--;
+      System.out.println("Jugador " + id + " creció 1 segmento. Tamaño actual: " + body.size() +
+                         ", Crecimiento pendiente: " + currentSnake.growthPending +
+                         ", Puntuación: " + scores.getOrDefault(id, 0));
+    } else {
+      // Movimiento normal: quitar cola
+      if (!body.isEmpty()) body.removeLast();
+    }
     }
 
     // opcional: re-spawn players que murieron (aquí se elimina y deja puntaje)
