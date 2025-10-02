@@ -20,6 +20,21 @@ public class GameServer {
   private final GameState state = new GameState();
   private volatile boolean running = true;
   public int nextPlayerId = 1;
+  
+  //Instrumentación para tests
+    private volatile long lastTickNanos = 0L;
+    private volatile long lastTickDurationMicros = 0L;
+    private volatile long lastBroadcastMicros = 0L;
+    private volatile long tickCount = 0L;
+
+    private void logEverySecond() {
+        if (tickCount % tps == 0) {
+            System.out.printf(
+                    "[metrics] ticks=%d clients=%d tick_us=%d broadcast_us=%d%n",
+                    tickCount, clients.size(), lastTickDurationMicros, lastBroadcastMicros
+            );
+        }
+    }
 
   private ServerSocket serverSocket;
   private final ScheduledExecutorService exec = Executors.newScheduledThreadPool(4);
@@ -64,7 +79,11 @@ public class GameServer {
   }
 
   private void tick() {
+      long t0 = System.nanoTime();
     try {
+        for (ClientSession cs : clients.values()) {
+            state.applyInput(cs.getPlayerId(), cs.consumeLastDirection());
+        }
       // 1) aplicar inputs solo si hay jugadores
       if (state.hasPlayers()) {
         for (ClientSession cs : clients.values()) {
@@ -74,7 +93,12 @@ public class GameServer {
         // 2) avanzar el mundo
         state.step();
       }
-
+        long b0 = System.nanoTime();
+        String payload = "STATE " + state.toJson() + "\n";
+        for (ClientSession cs : clients.values()) {
+            cs.send(payload);
+        }
+        lastBroadcastMicros = (System.nanoTime() - b0) / 1000;
       // 3) construir BOARD visual y difundir SIEMPRE (incluso sin jugadores)
       String boardContent = state.renderBoard();
       String boardPayload = "BOARD " + boardContent.replace("\n", "\\n") + "\n";
@@ -90,6 +114,10 @@ public class GameServer {
       }
     } catch (Throwable t) {
       t.printStackTrace();
+    } finally{
+        lastTickDurationMicros = (System.nanoTime() - t0) / 1000;
+        tickCount++;
+        logEverySecond();
     }
   }
 
