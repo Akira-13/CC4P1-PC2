@@ -106,35 +106,52 @@ public class GameClient {
         // Formato esperado:
         // {"snakes":[{"id":1,"body":[[x,y],...]}],"fruits":[[x,y],...],"scores":{"1":0}}
 
-        final int WIDTH = 32;
-        final int HEIGHT = 12;
+        int WIDTH  = extractInt(json, "\"width\":", 32);
+        int HEIGHT = extractInt(json, "\"height\":", 12);
         char[][] board = new char[HEIGHT][WIDTH];
 
-        // Inicializar tablero vacío
-        for (int y = 0; y < HEIGHT; y++) {
-            for (int x = 0; x < WIDTH; x++) {
-                board[y][x] = ' ';
-            }
-        }
+        // Inicializar vacío
+        for (int y = 0; y < HEIGHT; y++)
+          for (int x = 0; x < WIDTH; x++)
+            board[y][x] = ' ';
+
+        
 
         try {
-            // Extraer frutas
+            // --- paredes ---
+            int wallsStart = json.indexOf("\"walls\":[");
+            if (wallsStart != -1) {
+                int arrStart = wallsStart + 8; // '[' de "walls":[
+                int wallsEnd = findMatchingBracket(json, arrStart);
+                String wallsStr = json.substring(arrStart + 1, wallsEnd);
+                String[] pairs = wallsStr.split("\\],\\[");
+                for (String p : pairs) {
+                    String c = p.replace("[", "").replace("]", "").trim();
+                    if (c.isEmpty()) continue;
+                    String[] xy = c.split(",");
+                    int wx = Integer.parseInt(xy[0].trim());
+                    int wy = Integer.parseInt(xy[1].trim());
+                    if (wy >= 0 && wy < HEIGHT && wx >= 0 && wx < WIDTH) {
+                        board[wy][wx] = '#';
+                    }
+                }
+            }
+
+            // --- frutas ---
             int fruitsStart = json.indexOf("\"fruits\":[");
             if (fruitsStart != -1) {
-                int fruitsEnd = json.indexOf("]", fruitsStart + 10);
-                String fruitsStr = json.substring(fruitsStart + 10, fruitsEnd);
+                int arrStart  = fruitsStart + 9; // '[' de "fruits":[
+                int fruitsEnd = findMatchingBracket(json, arrStart);
+                String fruitsStr = json.substring(arrStart + 1, fruitsEnd);
                 String[] fruitPairs = fruitsStr.split("\\],\\[");
                 for (String pair : fruitPairs) {
-                    pair = pair.replace("[", "").replace("]", "");
-                    if (!pair.isEmpty()) {
-                        String[] coords = pair.split(",");
-                        if (coords.length == 2) {
-                            int x = Integer.parseInt(coords[0].trim());
-                            int y = Integer.parseInt(coords[1].trim());
-                            if (x >= 0 && x < WIDTH && y >= 0 && y < HEIGHT) {
-                                board[y][x] = 'F';
-                            }
-                        }
+                    String c = pair.replace("[", "").replace("]", "").trim();
+                    if (c.isEmpty()) continue;
+                    String[] coords = c.split(",");
+                    int x = Integer.parseInt(coords[0].trim());
+                    int y = Integer.parseInt(coords[1].trim());
+                    if (x >= 0 && x < WIDTH && y >= 0 && y < HEIGHT) {
+                        board[y][x] = 'F';
                     }
                 }
             }
@@ -290,4 +307,18 @@ public class GameClient {
         } catch (IOException ignored) {
         }
     }
+    
+    private int extractInt(String json, String key, int fallback) {
+        int i = json.indexOf(key);
+        if (i == -1) return fallback;
+        i += key.length();
+        StringBuilder num = new StringBuilder();
+        while (i < json.length()) {
+            char c = json.charAt(i++);
+            if ((c >= '0' && c <= '9') || c == '-') num.append(c);
+            else break;
+        }
+        try { return Integer.parseInt(num.toString()); } catch (Exception e) { return fallback; }
+    }
+
 }

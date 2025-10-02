@@ -10,23 +10,27 @@ import java.util.concurrent.*;
  * Servidor autoritativo simple:
  * - acepta conexiones
  * - crea una ClientSession por socket
- * - ejecuta tick fijo y difunde STATE a los clientes
+ * - ejecuta tick (TPS) y difunde STATE/BOARD/SCORES
  */
-
 public class GameServer {
   private final int port;
-  private final int tps;
+  // 🔸 TPS ahora es dinámico; ya no final
+  private volatile int tps;
+
   private final Map<Integer, ClientSession> clients = new ConcurrentHashMap<>();
   private final GameState state = new GameState();
   private volatile boolean running = true;
   public int nextPlayerId = 1;
 
   private ServerSocket serverSocket;
-  private final ScheduledExecutorService exec = Executors.newScheduledThreadPool(4);
+
+  // Un solo hilo es suficiente para el loop; otro para aceptar
+  private final ScheduledExecutorService exec = Executors.newScheduledThreadPool(2);
+  private ScheduledFuture<?> loopHandle;
 
   public GameServer(int port, int tps) {
     this.port = port;
-    this.tps = tps;
+    this.tps  = Math.max(1, tps); // fallback si el nivel no define tick aún
   }
 
   public void start() throws IOException {
@@ -46,17 +50,33 @@ public class GameServer {
           cs.start();
           System.out.println("Client connected: pid=" + pid + " from " + s.getRemoteSocketAddress());
         } catch (IOException e) {
-          if (running)
-            e.printStackTrace();
+          if (running) e.printStackTrace();
         }
       }
     });
 
-    long periodMs = 1000L / Math.max(1, tps);
-    exec.scheduleAtFixedRate(this::tick, 0, periodMs, TimeUnit.MILLISECONDS);
+    // 🔸 Programa el loop con el tick del nivel actual (si existe), si no usa el constructor
+    int initialTps = Math.max(1, safeLevelTps());
+    scheduleLoop(initialTps);
 
-    // Añadimos un shutdown hook para cerrar bien
+    // Shutdown ordenado
     Runtime.getRuntime().addShutdownHook(new Thread(this::shutdown));
+  }
+
+  // Reprograma el loop del juego al TPS indicado
+  private synchronized void scheduleLoop(int newTps) {
+    if (loopHandle != null) {
+      loopHandle.cancel(false);
+    }
+    this.tps = Math.max(1, newTps);
+    long periodMs = 1000L / this.tps;
+    loopHandle = exec.scheduleAtFixedRate(this::tick, 0, periodMs, TimeUnit.MILLISECONDS);
+    System.out.println("Loop programado a " + this.tps + " TPS");
+  }
+
+  private int safeLevelTps() {
+    try { return state.getCurrentTickRateHz(); }
+    catch (Throwable t) { return this.tps; }
   }
 
   private synchronized int assignPlayerId() {
@@ -75,17 +95,18 @@ public class GameServer {
         state.step();
       }
 
-      // 3) construir BOARD visual y difundir SIEMPRE (incluso sin jugadores)
+      // 3) difundir estado (STATE JSON + BOARD ASCII) y puntajes
+      //    (mantengo BOARD/SCORES por compatibilidad con tu cliente actual)
+      String stateJson = state.toJson();
       String boardContent = state.renderBoard();
-      String boardPayload = "BOARD " + boardContent.replace("\n", "\\n") + "\n";
-      for (ClientSession cs : clients.values()) {
-        cs.send(boardPayload);
-      }
-
-      // 4) enviar puntajes en formato texto separado SIEMPRE
+      String boardPayload  = "BOARD "  + boardContent.replace("\n", "\\n") + "\n";
+      String statePayload  = "STATE "  + stateJson + "\n";
       String scoresContent = state.renderScores();
       String scoresPayload = "SCORES " + scoresContent.replace("\n", "\\n") + "\n";
+
       for (ClientSession cs : clients.values()) {
+        cs.send(statePayload);
+        cs.send(boardPayload);
         cs.send(scoresPayload);
       }
     } catch (Throwable t) {
@@ -97,39 +118,55 @@ public class GameServer {
   public void onJoin(int playerId, String name) {
     state.addPlayer(playerId, name);
     ClientSession cs = clients.get(playerId);
-    if (cs != null)
-      cs.send("WELCOME " + playerId + "\n");
+    if (cs != null) cs.send("WELCOME " + playerId + "\n");
     System.out.println("Player joined: " + playerId + " name=" + name);
   }
 
   public void onInput(int playerId, String dir) {
     // guardado en ClientSession; GameServer aplica en el tick
     ClientSession cs = clients.get(playerId);
-    if (cs != null)
-      cs.setLastDirection(dir);
+    if (cs != null) cs.setLastDirection(dir);
   }
 
   public void onLevelCommand(int playerId, String levelCmd) {
-    // Solo permite cambiar nivel si es un comando válido
+    // Cambiar nivel y reprogramar TPS del loop
     if (levelCmd.equals("NEXT")) {
       state.nextLevel();
       System.out.println("Player " + playerId + " cambió al siguiente nivel");
+      onLevelChangedBroadcastAndReschedule();
     } else if (levelCmd.startsWith("SET ")) {
       try {
         int levelNumber = Integer.parseInt(levelCmd.substring(4));
         state.setLevel(levelNumber);
         System.out.println("Player " + playerId + " cambió al nivel " + levelNumber);
+        onLevelChangedBroadcastAndReschedule();
       } catch (NumberFormatException e) {
         ClientSession cs = clients.get(playerId);
-        if (cs != null) {
-          cs.send("ERR Invalid level number\n");
-        }
+        if (cs != null) cs.send("ERR Invalid level number\n");
       }
     } else {
       ClientSession cs = clients.get(playerId);
-      if (cs != null) {
-        cs.send("ERR Unknown level command. Use NEXT or SET <number>\n");
-      }
+      if (cs != null) cs.send("ERR Unknown level command. Use NEXT or SET <number>\n");
+    }
+  }
+
+  private void onLevelChangedBroadcastAndReschedule() {
+    // 🔸 Reprograma el loop con el tick del nuevo nivel
+    scheduleLoop(safeLevelTps());
+
+    // 🔸 Difunde inmediatamente el nuevo estado (para ver el mapa al instante)
+    String stateJson = state.toJson();
+    String boardContent = state.renderBoard();
+    String scoresContent = state.renderScores();
+
+    String statePayload  = "STATE "  + stateJson + "\n";
+    String boardPayload  = "BOARD "  + boardContent.replace("\n", "\\n") + "\n";
+    String scoresPayload = "SCORES " + scoresContent.replace("\n", "\\n") + "\n";
+
+    for (ClientSession cs : clients.values()) {
+      cs.send(statePayload);
+      cs.send(boardPayload);
+      cs.send(scoresPayload);
     }
   }
 
@@ -143,16 +180,12 @@ public class GameServer {
   private void shutdown() {
     running = false;
     try {
-      if (serverSocket != null)
-        serverSocket.close();
-    } catch (IOException ignored) {
-    }
+      if (serverSocket != null) serverSocket.close();
+    } catch (IOException ignored) {}
+    if (loopHandle != null) loopHandle.cancel(false);
     exec.shutdownNow();
     for (ClientSession cs : new ArrayList<>(clients.values())) {
-      try {
-        cs.closeSilently();
-      } catch (Exception ignored) {
-      }
+      try { cs.closeSilently(); } catch (Exception ignored) {}
     }
     System.out.println("Server stopped.");
   }
