@@ -42,10 +42,17 @@ public class GameClient {
                 while (running && (line = in.readLine()) != null) {
                     handleServerMessage(line);
                 }
+                // Si sale del bucle, es porque se perdió la conexión
+                if (window instanceof cc4p1.snake.ui.GameWindowClient) {
+                    ((cc4p1.snake.ui.GameWindowClient) window).onClientDisconnected();
+                }
             } catch (IOException e) {
                 if (running) {
                     System.err.println("Error en conexión: " + e.getMessage());
                     window.updateBoard("Error: Conexión perdida");
+                    if (window instanceof cc4p1.snake.ui.GameWindowClient) {
+                        ((cc4p1.snake.ui.GameWindowClient) window).onClientDisconnected();
+                    }
                 }
             }
         }, "ClientListener");
