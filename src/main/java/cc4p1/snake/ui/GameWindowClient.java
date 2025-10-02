@@ -19,17 +19,6 @@ import javax.swing.SwingUtilities;
  */
 public class GameWindowClient extends javax.swing.JFrame implements IBoardUpdater, KeyListener {
     // Permitir reactivar el botón de conexión tras perder
-    public void enableReconnect() {
-        System.out.println("DEBUG: enableReconnect llamado");
-        SwingUtilities.invokeLater(() -> {
-            System.out.println("DEBUG: Habilitando ConnectBtn y campos de entrada");
-            ConnectBtn.setEnabled(true);
-            IPInput.setEnabled(true);
-            PortInput.setEnabled(true);
-            UsernameInput.setEnabled(true);
-            connected = false;
-        });
-    }
 
     private GameClient gameClient;
     private boolean connected = false;
@@ -334,14 +323,6 @@ public class GameWindowClient extends javax.swing.JFrame implements IBoardUpdate
             Board.requestFocus();
         }
     }// GEN-LAST:event_LeftBtnActionPerformed
-
-    // Método para ser llamado cuando el cliente detecta desconexión o muerte
-    public void onClientDisconnected() {
-        System.out.println("DEBUG: onClientDisconnected llamado");
-        enableReconnect();
-        // También limpiar el cliente para evitar referencias viejas
-        gameClient = null;
-    }
 
     @Override
     public void keyPressed(KeyEvent e) {

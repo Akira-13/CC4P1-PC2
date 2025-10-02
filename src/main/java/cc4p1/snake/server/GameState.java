@@ -104,7 +104,10 @@ public class GameState {
 
     LinkedList<Pt> body = new LinkedList<>();
     body.add(new Pt(x, y));
-    snakes.put(id, new Snake(name, body));
+
+    char bodyLetter = Character.toLowerCase(name.trim().charAt(0));
+
+    snakes.put(id, new Snake(name, body, bodyLetter));
     directions.put(id, "RIGHT");
     scores.put(id, 0);
   }
@@ -421,9 +424,8 @@ public class GameState {
 
     // Dibujar serpientes
     for (Map.Entry<Integer, Snake> e : snakes.entrySet()) {
-      int pid = e.getKey();
       LinkedList<Pt> body = e.getValue().points;
-      char playerLetter = (char) ('A' + (pid % 26)); // usa letras A-Z para identificar jugadores
+      char bodyLetter = e.getValue().bodyLetter;
       boolean head = true;
       for (Pt p : body) {
         // Dibujar directamente en las coordenadas (sin offset)
@@ -431,7 +433,7 @@ public class GameState {
           board[p.y][p.x] = 'O'; // cabeza siempre es "O"
           head = false;
         } else {
-          board[p.y][p.x] = playerLetter; // cuerpo con letra del jugador
+          board[p.y][p.x] = bodyLetter; // cuerpo con letra personalizada
         }
       }
     }
@@ -461,19 +463,15 @@ public class GameState {
       sb.append("No hay jugadores conectados");
     } else {
       sb.append("=== PUNTAJES ===\n");
+      Set<String> nombresMostrados = new HashSet<>();
       for (Map.Entry<Integer, Snake> e : snakes.entrySet()) {
-        int playerId = e.getKey();
         String playerName = e.getValue().name;
-        int score = scores.getOrDefault(playerId, 0);
-        sb.append("Jugador ").append(playerId).append(" (").append(playerName).append("): ").append(score)
-            .append(" puntos\n");
+        int score = scores.getOrDefault(e.getKey(), 0);
+        if (!nombresMostrados.contains(playerName)) {
+          sb.append("Jugador (").append(playerName).append("): ").append(score).append(" puntos\n");
+          nombresMostrados.add(playerName);
+        }
       }
-
-      // Agregar leyenda de frutas
-      // sb.append("\nLeyenda de frutas:\n");
-      // sb.append("· = 1 pt | * = 2 pts | ♦ = 3 pts\n");
-      // sb.append("Paredes: # (mortales) | Espacios abiertos (wrap-around)\n");
-      // sb.append("Serpientes: O = cabeza | A,B,C... = cuerpo del jugador");
     }
 
     String result = sb.toString();
