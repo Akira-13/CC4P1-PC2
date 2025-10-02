@@ -86,7 +86,7 @@ public class GameWindowClient extends javax.swing.JFrame implements IBoardUpdate
 
         Board.setEditable(false);
         Board.setColumns(30);
-        Board.setFont(new java.awt.Font("Consolas", 0, 12)); // NOI18N
+        Board.setFont(new java.awt.Font("Monospaced", 0, 12)); // NOI18N
         Board.setRows(12);
         jScrollPane1.setViewportView(Board);
 
