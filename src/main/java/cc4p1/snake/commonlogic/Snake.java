@@ -11,16 +11,17 @@ import java.util.LinkedList;
  * @author Albert
  */
 public class Snake {
-    //public int id;
+    // public int id;
     public String name;
     public int size = 1;
     public LinkedList<Pt> points;
     public int growthPending = 0; // Segmentos pendientes de crecimiento
-    
-    public Snake(String name, LinkedList<Pt> points){
+    public char bodyLetter = 'o';
+
+    public Snake(String name, LinkedList<Pt> points, char bodyLetter) {
         this.name = name;
         this.points = points;
         this.growthPending = 0;
+        this.bodyLetter = bodyLetter;
     }
 }
-

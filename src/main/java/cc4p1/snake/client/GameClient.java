@@ -107,7 +107,7 @@ public class GameClient {
         // {"snakes":[{"id":1,"body":[[x,y],...]}],"fruits":[[x,y],...],"scores":{"1":0}}
 
         final int WIDTH = 32;
-        final int HEIGHT = 10;
+        final int HEIGHT = 12;
         char[][] board = new char[HEIGHT][WIDTH];
 
         // Inicializar tablero vacío

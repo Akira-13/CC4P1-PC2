@@ -1,14 +1,14 @@
-C:\Users\gabri\Downloads\prueba 2\CC4P1-PC2\src\main\java\cc4p1\snake\client\ClientMain.java
-C:\Users\gabri\Downloads\prueba 2\CC4P1-PC2\src\main\java\cc4p1\snake\client\ClientSession.java
-C:\Users\gabri\Downloads\prueba 2\CC4P1-PC2\src\main\java\cc4p1\snake\client\GameClient.java
-C:\Users\gabri\Downloads\prueba 2\CC4P1-PC2\src\main\java\cc4p1\snake\commonlogic\Board.java
-C:\Users\gabri\Downloads\prueba 2\CC4P1-PC2\src\main\java\cc4p1\snake\commonlogic\Fruit.java
-C:\Users\gabri\Downloads\prueba 2\CC4P1-PC2\src\main\java\cc4p1\snake\commonlogic\Pt.java
-C:\Users\gabri\Downloads\prueba 2\CC4P1-PC2\src\main\java\cc4p1\snake\commonlogic\Snake.java
-C:\Users\gabri\Downloads\prueba 2\CC4P1-PC2\src\main\java\cc4p1\snake\game\LevelManager.java
-C:\Users\gabri\Downloads\prueba 2\CC4P1-PC2\src\main\java\cc4p1\snake\server\GameServer.java
-C:\Users\gabri\Downloads\prueba 2\CC4P1-PC2\src\main\java\cc4p1\snake\server\GameState.java
-C:\Users\gabri\Downloads\prueba 2\CC4P1-PC2\src\main\java\cc4p1\snake\server\ServerMain.java
-C:\Users\gabri\Downloads\prueba 2\CC4P1-PC2\src\main\java\cc4p1\snake\ui\GameWindow.java
-C:\Users\gabri\Downloads\prueba 2\CC4P1-PC2\src\main\java\cc4p1\snake\ui\GameWindowClient.java
-C:\Users\gabri\Downloads\prueba 2\CC4P1-PC2\src\main\java\cc4p1\snake\ui\IBoardUpdater.java
+/home/ak13a/Documentos/25-2/Concurrentes/PC2/CC4P1-PC2/src/main/java/cc4p1/snake/client/ClientMain.java
+/home/ak13a/Documentos/25-2/Concurrentes/PC2/CC4P1-PC2/src/main/java/cc4p1/snake/client/ClientSession.java
+/home/ak13a/Documentos/25-2/Concurrentes/PC2/CC4P1-PC2/src/main/java/cc4p1/snake/client/GameClient.java
+/home/ak13a/Documentos/25-2/Concurrentes/PC2/CC4P1-PC2/src/main/java/cc4p1/snake/commonlogic/Board.java
+/home/ak13a/Documentos/25-2/Concurrentes/PC2/CC4P1-PC2/src/main/java/cc4p1/snake/commonlogic/Fruit.java
+/home/ak13a/Documentos/25-2/Concurrentes/PC2/CC4P1-PC2/src/main/java/cc4p1/snake/commonlogic/Pt.java
+/home/ak13a/Documentos/25-2/Concurrentes/PC2/CC4P1-PC2/src/main/java/cc4p1/snake/commonlogic/Snake.java
+/home/ak13a/Documentos/25-2/Concurrentes/PC2/CC4P1-PC2/src/main/java/cc4p1/snake/game/LevelManager.java
+/home/ak13a/Documentos/25-2/Concurrentes/PC2/CC4P1-PC2/src/main/java/cc4p1/snake/server/GameServer.java
+/home/ak13a/Documentos/25-2/Concurrentes/PC2/CC4P1-PC2/src/main/java/cc4p1/snake/server/GameState.java
+/home/ak13a/Documentos/25-2/Concurrentes/PC2/CC4P1-PC2/src/main/java/cc4p1/snake/server/ServerMain.java
+/home/ak13a/Documentos/25-2/Concurrentes/PC2/CC4P1-PC2/src/main/java/cc4p1/snake/ui/GameWindow.java
+/home/ak13a/Documentos/25-2/Concurrentes/PC2/CC4P1-PC2/src/main/java/cc4p1/snake/ui/GameWindowClient.java
+/home/ak13a/Documentos/25-2/Concurrentes/PC2/CC4P1-PC2/src/main/java/cc4p1/snake/ui/IBoardUpdater.java
