@@ -56,7 +56,7 @@ public class GameWindow extends javax.swing.JFrame implements IBoardUpdater, Key
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated
     // <editor-fold defaultstate="collapsed" desc="Generated
-    // Code">//GEN-BEGIN:initComponents
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
         jScrollPane1 = new javax.swing.JScrollPane();
@@ -67,11 +67,12 @@ public class GameWindow extends javax.swing.JFrame implements IBoardUpdater, Key
         DownBtn = new javax.swing.JButton();
         StartServerBtn = new javax.swing.JButton();
         ConnectBtn = new javax.swing.JButton();
-        NextLevelBtn = new javax.swing.JButton();
         jScrollPane2 = new javax.swing.JScrollPane();
         jPuntuacionServer = new javax.swing.JTextArea();
+        NextLevel = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setPreferredSize(new java.awt.Dimension(1600, 900));
 
         Board.setEditable(false);
         Board.setColumns(30);
@@ -125,88 +126,96 @@ public class GameWindow extends javax.swing.JFrame implements IBoardUpdater, Key
             }
         });
 
-        NextLevelBtn.setText("NEXT LEVEL");
-        NextLevelBtn.addActionListener(new java.awt.event.ActionListener() {
+        jPuntuacionServer.setColumns(20);
+        jPuntuacionServer.setRows(5);
+        jScrollPane2.setViewportView(jPuntuacionServer);
+
+        NextLevel.setText("NEXT LEVEL");
+        NextLevel.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                NextLevelBtnActionPerformed(evt);
+                NextLevelActionPerformed(evt);
             }
         });
-
-        jPuntuacionServer.setColumns(30);
-        jPuntuacionServer.setRows(10);
-        jScrollPane2.setViewportView(jPuntuacionServer);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
-                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addGap(24, 24, 24)
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGap(24, 24, 24)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 401, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(20, 20, 20))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 1319, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(59, 59, 59)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 275,
-                                                javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 401,
-                                                javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGap(34, 34, 34)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addGroup(layout.createSequentialGroup()
                                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout
-                                                        .createSequentialGroup()
-                                                        .addComponent(LeftBtn, javax.swing.GroupLayout.PREFERRED_SIZE,
-                                                                42, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                        .addGap(18, 18, 18)
-                                                        .addComponent(RightBtn, javax.swing.GroupLayout.PREFERRED_SIZE,
-                                                                42, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout
-                                                        .createSequentialGroup()
-                                                        .addComponent(DownBtn, javax.swing.GroupLayout.PREFERRED_SIZE,
-                                                                42, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                        .addGap(29, 29, 29))
-                                                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout
-                                                        .createSequentialGroup()
-                                                        .addComponent(UpBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 42,
-                                                                javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                        .addGap(30, 30, 30)))
-                                        .addComponent(StartServerBtn, javax.swing.GroupLayout.DEFAULT_SIZE,
-                                                javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                        .addComponent(ConnectBtn, javax.swing.GroupLayout.DEFAULT_SIZE,
-                                                javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                        .addComponent(NextLevelBtn, javax.swing.GroupLayout.DEFAULT_SIZE,
-                                                javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                                .addContainerGap(49, Short.MAX_VALUE)));
-        layout.setVerticalGroup(
-                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(layout.createSequentialGroup()
-                                .addGap(50, 50, 50)
+                                            .addComponent(ConnectBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(StartServerBtn)
+                                            .addComponent(NextLevel))
+                                        .addGap(0, 0, Short.MAX_VALUE))
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(LeftBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(18, 18, Short.MAX_VALUE)
+                                        .addComponent(RightBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(19, 19, 19))))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addGroup(layout.createSequentialGroup()
-                                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 214,
-                                                        javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED,
-                                                        javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE,
-                                                        javax.swing.GroupLayout.DEFAULT_SIZE,
-                                                        javax.swing.GroupLayout.PREFERRED_SIZE))
-                                        .addGroup(layout.createSequentialGroup()
-                                                .addComponent(StartServerBtn)
-                                                .addGap(18, 18, 18)
-                                                .addComponent(ConnectBtn)
-                                                .addGap(18, 18, 18)
-                                                .addComponent(NextLevelBtn)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED,
-                                                        javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                                .addComponent(UpBtn)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                                .addGroup(layout
-                                                        .createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                                        .addComponent(RightBtn)
-                                                        .addComponent(LeftBtn))
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                                .addComponent(DownBtn)
-                                                .addGap(64, 64, 64)))));
+                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                        .addComponent(UpBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(54, 54, 54))
+                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                        .addComponent(DownBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(53, 53, 53))))))))
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(50, 50, 50)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(StartServerBtn)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(ConnectBtn)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(NextLevel)
+                        .addGap(50, 50, 50)
+                        .addComponent(UpBtn)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(LeftBtn)
+                            .addComponent(RightBtn))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(DownBtn))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 624, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(84, Short.MAX_VALUE))
+        );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void NextLevelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_NextLevelActionPerformed
+        if (!serverStarted) {
+            Board.setText("ERROR: Primero inicia el servidor.");
+            return;
+        }
+        if (!connected || localClient == null) {
+            Board.setText("ERROR: Conéctate primero (CONNECT) para cambiar de nivel.");
+            return;
+        }
+
+        // Enviar comando al servidor a través del GameClient
+        localClient.sendLevelCommand("NEXT"); // manda "LEVEL NEXT"
+        Board.requestFocus();
+    }//GEN-LAST:event_NextLevelActionPerformed
 
     private void StartServerBtnActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_StartServerBtnActionPerformed
         // TODO add your handling code here:
@@ -284,16 +293,6 @@ public class GameWindow extends javax.swing.JFrame implements IBoardUpdater, Key
         }
     }// GEN-LAST:event_ConnectBtnActionPerformed
 
-    private void NextLevelBtnActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_NextLevelBtnActionPerformed
-        // TODO add your handling code here:
-        if (connected && localClient != null) {
-            // Enviar comando para cambiar nivel
-            localClient.sendLevelCommand("NEXT");
-            Board.requestFocus();
-        } else {
-            Board.setText("ERROR: Debes estar conectado para cambiar de nivel");
-        }
-    }// GEN-LAST:event_NextLevelBtnActionPerformed
 
     private void LeftBtnActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_LeftBtnActionPerformed
         // TODO add your handling code here:
@@ -340,7 +339,7 @@ public class GameWindow extends javax.swing.JFrame implements IBoardUpdater, Key
     private javax.swing.JButton ConnectBtn;
     private javax.swing.JButton DownBtn;
     private javax.swing.JButton LeftBtn;
-    private javax.swing.JButton NextLevelBtn;
+    private javax.swing.JButton NextLevel;
     private javax.swing.JButton RightBtn;
     private javax.swing.JButton StartServerBtn;
     private javax.swing.JButton UpBtn;
