@@ -27,8 +27,8 @@ import java.util.*;
  * la lógica más completa al módulo core/ y añadir tests.
  */
 public class GameState {
-  public static final int WIDTH = 30; // Área de juego: 28 caracteres
-  public static final int HEIGHT = 10; // Área interna: 10 líneas (archivos nivel = 12, bordes incluidos)
+  public static final int WIDTH = 32; // Área de juego: 28 caracteres
+  public static final int HEIGHT = 12; // Área interna: 10 líneas (archivos nivel = 12, bordes incluidos)
 
   // Sistema de paredes: true = hay pared, false = espacio abierto (wrap-around)
   private final boolean[][] walls = new boolean[12][32]; // Tamaño exacto de archivos de nivel
@@ -57,8 +57,8 @@ public class GameState {
 
   private void initializeWalls() {
     // Inicializar todas las posiciones como espacios libres (dimensiones exactas)
-    for (int y = 0; y < HEIGHT + 2; y++) {
-      for (int x = 0; x < WIDTH + 2; x++) {
+    for (int y = 0; y < HEIGHT; y++) {
+      for (int x = 0; x < WIDTH; x++) {
         walls[y][x] = false;
       }
     }
@@ -72,8 +72,8 @@ public class GameState {
     }
 
     // Adaptar el mapa cargado a nuestro sistema de paredes (tamaño exacto)
-    int mapHeight = Math.min(levelMap.length, 12);
-    int mapWidth = levelMap.length > 0 ? Math.min(levelMap[0].length, 32) : 0;
+    int mapHeight = Math.min(levelMap.length, walls.length);
+    int mapWidth = levelMap.length > 0 ? Math.min(levelMap[0].length, walls[0].length) : 0;
 
     for (int y = 0; y < mapHeight; y++) {
       StringBuilder rowDebug = new StringBuilder();
@@ -99,8 +99,8 @@ public class GameState {
 
   public synchronized void addPlayer(int id, String name) {
     // coloca la serpiente en una posición no colisionada
-    int x = rand.nextInt(1,WIDTH);
-    int y = rand.nextInt(1,HEIGHT);
+    int x = rand.nextInt(1,WIDTH-1);
+    int y = rand.nextInt(1,HEIGHT-1);
 
     LinkedList<Pt> body = new LinkedList<>();
     body.add(new Pt(x, y));
